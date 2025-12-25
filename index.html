@@ -3,189 +3,460 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GF Productions | Production et Diffusion de Spectacles Vivants</title>
-    <!-- Tailwind CSS pour le design -->
+    <title>GF Productions | Gabriel Francès</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Polices élégantes -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;600&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
         body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
-        h1, h2, h3 { font-family: 'Playfair Display', serif; }
-        .hero-gradient { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)); }
-        .card-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
+        h1, h2, h3, .font-serif { font-family: 'Playfair Display', serif; }
+        .font-signature { font-family: 'Caveat', cursive; }
+        
+        .page-transition { animation: fadeIn 0.8s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .img-container img { transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease; }
+        .group:hover .img-container img { transform: scale(1.05); filter: grayscale(0); }
+        
+        .modal { transition: all 0.3s ease; display: none; opacity: 0; }
+        .modal.active { display: flex; opacity: 1; }
+
+        .logo-demo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1c1917;
+            color: white;
+            font-family: 'Playfair Display', serif;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+
+        .carousel-img { transition: opacity 0.4s ease-in-out; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #faf9f6; }
+        ::-webkit-scrollbar-thumb { background: #e7e5e4; border-radius: 10px; }
     </style>
 </head>
-<body class="bg-stone-50 text-stone-900 leading-relaxed">
+<body class="bg-[#faf9f6] text-stone-900">
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-stone-200">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="text-2xl font-bold tracking-tighter text-stone-900">GF<span class="text-amber-700">.</span>PRODUCTIONS</div>
-            <div class="hidden md:flex space-x-8 font-medium text-sm uppercase tracking-widest text-stone-600">
-                <a href="#spectacles" class="hover:text-amber-700 transition">Spectacles</a>
-                <a href="#agence" class="hover:text-amber-700 transition">L'Agence</a>
-                <a href="#contact" class="hover:text-amber-700 transition text-amber-800">Booking</a>
+    <header>
+        <nav class="fixed w-full z-50 bg-white/70 backdrop-blur-lg border-b border-stone-100">
+            <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+                <div class="text-xl font-serif font-bold tracking-tighter cursor-pointer flex items-center gap-3" onclick="showPage('home')">
+                    <div class="logo-demo h-8 w-8 text-[10px]">GF</div>
+                    <span>PRODUCTIONS</span>
+                </div>
+                <div class="hidden md:flex space-x-8 font-medium text-[10px] uppercase tracking-[0.2em] items-center text-stone-500">
+                    <a href="javascript:void(0)" onclick="showPage('home')" class="hover:text-orange-700 transition">Catalogue</a>
+                    <a href="javascript:void(0)" onclick="showPage('auteur')" class="hover:text-orange-700 transition">L'Auteur</a>
+                    <a href="javascript:void(0)" onclick="showPage('tournee')" class="hover:text-orange-700 transition">Tournée</a>
+                    <a href="javascript:void(0)" onclick="showPage('presskits')" class="hover:text-orange-700 transition">Press Kits</a>
+                    <a href="javascript:void(0)" onclick="showPage('booking')" class="bg-stone-900 text-white px-6 py-3 rounded-full hover:bg-orange-700 transition shadow-lg shadow-stone-200">Booking Pro</a>
+                </div>
             </div>
-            <button class="md:hidden text-stone-900">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                </svg>
-            </button>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <header class="relative h-screen flex items-center justify-center overflow-hidden">
-        <div class="absolute inset-0 z-0">
-            <img src="https://images.unsplash.com/photo-1514525253361-b83f8b91272c?auto=format&fit=crop&q=80&w=2000" alt="Scène de théâtre" class="w-full h-full object-cover">
-            <div class="absolute inset-0 hero-gradient"></div>
-        </div>
-        <div class="relative z-10 text-center px-6 max-w-4xl">
-            <h1 class="text-5xl md:text-7xl text-white mb-6 leading-tight italic">L'art de donner vie aux émotions.</h1>
-            <p class="text-xl text-stone-200 mb-10 font-light max-w-2xl mx-auto">Production, diffusion et accompagnement d'artistes d'exception. Découvrez notre catalogue 2024-2025.</p>
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="#spectacles" class="px-8 py-4 bg-amber-700 text-white rounded-full font-semibold hover:bg-amber-800 transition shadow-lg w-full sm:w-auto">Découvrir nos spectacles</a>
-                <a href="#contact" class="px-8 py-4 bg-white/10 backdrop-blur-md text-white border border-white/30 rounded-full font-semibold hover:bg-white/20 transition w-full sm:w-auto">Nous contacter</a>
-            </div>
-        </div>
+        </nav>
     </header>
 
-    <!-- Section Spectacles -->
-    <section id="spectacles" class="py-24 px-6 max-w-7xl mx-auto">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-            <div class="max-w-2xl">
-                <h2 class="text-4xl md:text-5xl mb-6">Nos Spectacles en Tournée</h2>
-                <p class="text-stone-600 text-lg">De l'humour à la magie, de la poésie au théâtre classique, nous produisons des œuvres qui marquent les esprits et remplissent les salles.</p>
-            </div>
-            <div class="flex gap-2">
-                <button class="p-3 border border-stone-200 rounded-full hover:bg-stone-100 transition"><svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button>
-                <button class="p-3 border border-stone-200 rounded-full hover:bg-stone-100 transition"><svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>
-            </div>
-        </div>
+    <!-- Zone de contenu -->
+    <main id="content-area" class="pt-20">
+        <!-- Rendu dynamique par JS -->
+    </main>
 
-        <!-- Grid Catalogue -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            <!-- Spectacle 1 -->
-            <div class="card-hover bg-white rounded-2xl overflow-hidden border border-stone-100">
-                <div class="h-96 relative">
-                    <img src="https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?auto=format&fit=crop&q=80&w=800" alt="Spectacle Humour" class="w-full h-full object-cover">
-                    <div class="absolute top-4 left-4 bg-amber-700 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-tighter">Humour</div>
-                </div>
-                <div class="p-8">
-                    <h3 class="text-2xl mb-2">Le Seul en Scène</h3>
-                    <p class="text-stone-500 mb-6 font-light">Une performance hilarante qui décrypte les travers de notre société avec une élégance rare.</p>
-                    <button class="text-amber-800 font-semibold flex items-center hover:gap-2 transition-all uppercase text-sm tracking-widest">
-                        En savoir plus <span class="ml-2">→</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Spectacle 2 -->
-            <div class="card-hover bg-white rounded-2xl overflow-hidden border border-stone-100">
-                <div class="h-96 relative">
-                    <img src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&q=80&w=800" alt="Spectacle Magie" class="w-full h-full object-cover">
-                    <div class="absolute top-4 left-4 bg-stone-900 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-tighter">Mentalisme</div>
-                </div>
-                <div class="p-8">
-                    <h3 class="text-2xl mb-2">L'Illusionniste</h3>
-                    <p class="text-stone-500 mb-6 font-light">Un spectacle immersif où la réalité devient floue. Une expérience inoubliable pour tous les publics.</p>
-                    <button class="text-amber-800 font-semibold flex items-center hover:gap-2 transition-all uppercase text-sm tracking-widest">
-                        En savoir plus <span class="ml-2">→</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Spectacle 3 -->
-            <div class="card-hover bg-white rounded-2xl overflow-hidden border border-stone-100">
-                <div class="h-96 relative">
-                    <img src="https://images.unsplash.com/photo-1503095396549-807a8bc3667c?auto=format&fit=crop&q=80&w=800" alt="Spectacle Théâtre" class="w-full h-full object-cover">
-                    <div class="absolute top-4 left-4 bg-amber-700 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-tighter">Théâtre</div>
-                </div>
-                <div class="p-8">
-                    <h3 class="text-2xl mb-2">Les Grands Classiques</h3>
-                    <p class="text-stone-500 mb-6 font-light">Redécouvrez les textes qui ont façonné l'histoire, portés par une mise en scène moderne et audacieuse.</p>
-                    <button class="text-amber-800 font-semibold flex items-center hover:gap-2 transition-all uppercase text-sm tracking-widest">
-                        En savoir plus <span class="ml-2">→</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section Agence -->
-    <section id="agence" class="py-24 bg-stone-900 text-white">
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-            <div>
-                <h2 class="text-4xl md:text-5xl mb-8">Plus qu'une agence,<br><span class="text-stone-500 italic">un partenaire d'émotion.</span></h2>
-                <p class="text-stone-400 text-lg mb-8 leading-relaxed">
-                    GF Productions accompagne les artistes et les programmateurs depuis plus de 10 ans. Notre expertise s'étend de la création artistique pure à la logistique complexe des tournées internationales.
-                </p>
-                <div class="grid grid-cols-2 gap-8 py-8 border-y border-stone-800">
-                    <div>
-                        <div class="text-3xl font-bold text-amber-600 mb-1">150+</div>
-                        <div class="text-stone-500 text-sm uppercase tracking-widest">Dates par an</div>
+    <!-- Pied de page avec Réseaux Sociaux -->
+    <footer class="bg-white border-t border-stone-100 pt-20 pb-12 px-6 mt-20">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 items-center pb-16 border-b border-stone-100">
+                <!-- Branding -->
+                <div class="flex flex-col items-center md:items-start gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="logo-demo h-8 w-8 text-[10px]">GF</div>
+                        <div class="font-serif font-bold text-stone-900 text-lg italic">GF Productions</div>
                     </div>
-                    <div>
-                        <div class="text-3xl font-bold text-amber-600 mb-1">15</div>
-                        <div class="text-stone-500 text-sm uppercase tracking-widest">Artistes produits</div>
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-stone-400 text-center md:text-left">
+                        Production • Diffusion • Direction Artistique
+                    </p>
+                </div>
+
+                <!-- Réseaux Sociaux -->
+                <div class="flex flex-col items-center gap-6">
+                    <span class="text-[10px] uppercase tracking-[0.4em] font-bold text-stone-500">Suivez-nous</span>
+                    <div class="flex gap-8">
+                        <a href="https://instagram.com/gf.productions" target="_blank" class="text-stone-400 hover:text-orange-700 transition-colors" title="Instagram">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                        <a href="https://www.facebook.com/profile.php?id=61585318691464$0" target="_blank" class="text-stone-400 hover:text-orange-700 transition-colors" title="Facebook">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        </a>
                     </div>
                 </div>
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-                <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=600" class="rounded-2xl grayscale hover:grayscale-0 transition duration-700" alt="Event">
-                <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=600" class="rounded-2xl mt-12 grayscale hover:grayscale-0 transition duration-700" alt="Studio">
-            </div>
-        </div>
-    </section>
 
-    <!-- Formulaire Contact -->
-    <section id="contact" class="py-24 px-6 max-w-4xl mx-auto">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl md:text-5xl mb-4 text-stone-900">Contact & Booking</h2>
-            <p class="text-stone-500">Vous êtes programmateur ou vous souhaitez collaborer avec nous ?</p>
-        </div>
-        <form class="space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-semibold mb-2 uppercase tracking-widest text-stone-600">Nom Complet</label>
-                    <input type="text" class="w-full p-4 bg-white border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-700 focus:outline-none" placeholder="Jean Dupont">
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold mb-2 uppercase tracking-widest text-stone-600">Email Professionnel</label>
-                    <input type="email" class="w-full p-4 bg-white border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-700 focus:outline-none" placeholder="contact@votremairie.fr">
+                <!-- Navigation Rapide -->
+                <div class="flex flex-col items-center md:items-end gap-3 text-[10px] uppercase tracking-widest font-semibold text-stone-500">
+                    <a href="javascript:void(0)" onclick="showPage('home')" class="hover:text-orange-700">Catalogue</a>
+                    <a href="javascript:void(0)" onclick="showPage('tournee')" class="hover:text-orange-700">Tournée</a>
+                    <a href="javascript:void(0)" onclick="showPage('booking')" class="hover:text-orange-700">Contact Booking</a>
                 </div>
             </div>
-            <div>
-                <label class="block text-sm font-semibold mb-2 uppercase tracking-widest text-stone-600">Spectacle concerné</label>
-                <select class="w-full p-4 bg-white border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-700 focus:outline-none">
-                    <option>Sélectionnez un spectacle</option>
-                    <option>Le Seul en Scène</option>
-                    <option>L'Illusionniste</option>
-                    <option>Les Grands Classiques</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-sm font-semibold mb-2 uppercase tracking-widest text-stone-600">Votre Message</label>
-                <textarea rows="6" class="w-full p-4 bg-white border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-700 focus:outline-none" placeholder="Décrivez votre projet de programmation..."></textarea>
-            </div>
-            <button type="submit" class="w-full py-5 bg-stone-900 text-white rounded-xl font-bold uppercase tracking-widest hover:bg-stone-800 transition">Envoyer la demande de booking</button>
-        </form>
-    </section>
 
-    <!-- Footer -->
-    <footer class="bg-stone-50 border-t border-stone-200 py-16 px-6">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
-            <div>
-                <div class="text-2xl font-bold tracking-tighter mb-4 text-stone-900">GF<span class="text-amber-700">.</span>PRODUCTIONS</div>
-                <p class="text-stone-500 text-sm italic">Diffuser l'exceptionnel, cultiver l'émotion.</p>
-            </div>
-            <div class="text-sm text-stone-500">
-                © 2024 GF Productions. Tous droits réservés. <br>
-                <span class="mt-2 block">contact@gfproductions.fr</span>
+            <div class="mt-12 flex flex-col md:flex-row justify-between items-center gap-4 text-stone-400 text-[9px] uppercase tracking-widest">
+                <p>&copy; 2024 GF Productions. Tous droits réservés.</p>
+                <div class="flex gap-8">
+                    <a href="#" class="hover:text-stone-900 transition-colors">Mentions Légales</a>
+                    <a href="#" class="hover:text-stone-900 transition-colors">Cookies</a>
+                </div>
             </div>
         </div>
     </footer>
 
+    <!-- Modale de détail spectacle -->
+    <div id="showModal" class="modal fixed inset-0 z-[100] bg-stone-900/60 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white max-w-5xl w-full max-h-[90vh] overflow-y-auto relative shadow-2xl rounded-3xl border border-stone-100">
+            <button onclick="closeModal()" class="fixed md:absolute top-6 right-6 bg-white md:bg-stone-100 p-2 rounded-full shadow-md text-stone-400 hover:text-black text-2xl z-50 transition-all hover:rotate-90">✕</button>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration des spectacles
+        const shows = [
+            { 
+                id: 'spectacle-1', 
+                title: "L'Ombre du Silence", 
+                genre: "Drame Contemporain", 
+                images: [
+                    "https://images.unsplash.com/photo-1503095396549-807039045349?q=80&w=1000",
+                    "https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?q=80&w=1000",
+                    "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=1000",
+                    "https://images.unsplash.com/photo-1533488765986-dfa2a9939acd?q=80&w=1000"
+                ],
+                fullContent: "L'Ombre du Silence est une pièce magistrale qui interroge la place de la mémoire à travers les non-dits d'une famille déchirée. Une mise en scène épurée qui laisse toute la place à l'émotion brute des acteurs.",
+                videoUrl: "#",
+                pressKitUrl: "#",
+                techSheetUrl: "#"
+            },
+            { 
+                id: 'spectacle-2', 
+                title: "Éclats de Rire", 
+                genre: "Comédie de Boulevard", 
+                images: [
+                    "https://images.unsplash.com/photo-1514302240734-41cf3c2c4a05?q=80&w=1000",
+                    "https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=1000",
+                    "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=1000",
+                    "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1000"
+                ], 
+                fullContent: "Une comédie brillante dans la pure tradition du boulevard, revisitée avec une énergie moderne. Quiproquos, rythme effréné et rires garantis pour cette production coup de cœur.",
+                videoUrl: "#",
+                pressKitUrl: "#",
+                techSheetUrl: "#"
+            },
+            { 
+                id: 'spectacle-3', 
+                title: "Le Dernier Acte", 
+                genre: "Tragi-comédie", 
+                images: [
+                    "https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=1000",
+                    "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=1000",
+                    "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1000",
+                    "https://images.unsplash.com/photo-1460723237483-7a6dc9d0b212?q=80&w=1000"
+                ], 
+                fullContent: "Un hommage vibrant aux gens de scène, entre rires et larmes. Ce spectacle explore les coulisses d'un théâtre en faillite où la passion reste le dernier rempart contre l'oubli.",
+                videoUrl: "#",
+                pressKitUrl: "#",
+                techSheetUrl: "#"
+            }
+        ];
+
+        // Calendrier
+        const dates = [
+            { date: "15 Oct 2024", show: "L'Ombre du Silence", venue: "Théâtre des Célestins", city: "Lyon" },
+            { date: "22 Oct 2024", show: "Éclats de Rire", venue: "Théâtre de la Gaîté", city: "Paris" },
+            { date: "05 Nov 2024", show: "Le Dernier Acte", venue: "Le Quai", city: "Angers" },
+            { date: "12 Nov 2024", show: "L'Ombre du Silence", venue: "Théâtre National", city: "Strasbourg" },
+            { date: "18 Nov 2024", show: "Éclats de Rire", venue: "Odyssud", city: "Blagnac" }
+        ];
+
+        let currentImageIndex = 0;
+        let currentShowImages = [];
+
+        // --- Fonctions de Rendu ---
+
+        function renderHome() {
+            const html = `
+                <section class="page-transition">
+                    <div class="relative h-[45vh] flex flex-col items-center justify-center bg-stone-100 overflow-hidden border-b border-stone-200">
+                        <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=2000" class="absolute inset-0 w-full h-full object-cover opacity-10" alt="Scène">
+                        <div class="relative z-10 text-center px-6 flex flex-col items-center">
+                            <div class="logo-demo h-24 w-24 mb-10 opacity-20 text-xl grayscale shadow-md ring-1 ring-stone-900/5">GF</div>
+                            <span class="text-orange-700 uppercase tracking-[0.4em] text-[10px] font-bold mb-3 block">Production de Spectacles Vivants</span>
+                            <h1 class="text-5xl md:text-7xl font-serif italic text-stone-900 tracking-tight">Faisons la Comédie</h1>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center -translate-y-1/2 relative z-20">
+                        <button onclick="document.getElementById('catalogue-anchor').scrollIntoView({behavior:'smooth'})" class="border border-stone-200 hover:border-orange-700 hover:text-orange-700 transition-all px-8 py-4 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold group bg-white shadow-xl shadow-stone-200/50">
+                            Découvrir le catalogue ↓
+                        </button>
+                    </div>
+
+                    <div id="catalogue-anchor" class="max-w-7xl mx-auto px-6 py-24 text-center">
+                        <h2 class="text-5xl font-serif italic mb-6">Catalogue des Spectacles</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-16 mt-16">
+                            ${shows.map(show => `
+                                <article class="group cursor-pointer" onclick="openModal('${show.id}')">
+                                    <div class="img-container aspect-[3/4] overflow-hidden bg-stone-200 mb-8 rounded-xl shadow-sm border border-stone-100">
+                                        <img src="${show.images[0]}" class="w-full h-full object-cover grayscale group-hover:grayscale-0">
+                                    </div>
+                                    <h3 class="text-3xl font-serif italic">${show.title}</h3>
+                                </article>
+                            `).join('')}
+                        </div>
+                    </div>
+                </section>
+            `;
+            document.getElementById('content-area').innerHTML = html;
+        }
+
+        // --- Gestion Carrousel ---
+
+        function updateCarousel() {
+            const imgElement = document.getElementById('carousel-main-img');
+            const counterElement = document.getElementById('carousel-counter');
+            if (imgElement) {
+                imgElement.style.opacity = '0';
+                setTimeout(() => {
+                    imgElement.src = currentShowImages[currentImageIndex];
+                    imgElement.style.opacity = '1';
+                    if (counterElement) counterElement.innerText = `${currentImageIndex + 1} / ${currentShowImages.length}`;
+                }, 150);
+            }
+        }
+
+        function nextImage(event) {
+            event.stopPropagation();
+            currentImageIndex = (currentImageIndex + 1) % currentShowImages.length;
+            updateCarousel();
+        }
+
+        function prevImage(event) {
+            event.stopPropagation();
+            currentImageIndex = (currentImageIndex - 1 + currentShowImages.length) % currentShowImages.length;
+            updateCarousel();
+        }
+
+        // --- Gestion Modale ---
+
+        function openModal(showId) {
+            const show = shows.find(s => s.id === showId);
+            currentShowImages = show.images;
+            currentImageIndex = 0;
+
+            document.getElementById('modal-body').innerHTML = `
+                <div class="flex flex-col md:flex-row items-stretch min-h-[600px]">
+                    <div class="md:w-2/5 bg-stone-100 relative overflow-hidden flex items-center justify-center min-h-[450px] group/carousel">
+                        <img id="carousel-main-img" src="${show.images[0]}" class="carousel-img w-full h-full object-cover">
+                        <div class="absolute inset-0 flex items-center justify-between px-4 opacity-0 group-hover/carousel:opacity-100 transition-opacity bg-gradient-to-b from-transparent via-transparent to-stone-900/20">
+                            <button onclick="prevImage(event)" class="bg-white/90 hover:bg-white text-stone-900 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-transform active:scale-90">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"></path></svg>
+                            </button>
+                            <button onclick="nextImage(event)" class="bg-white/90 hover:bg-white text-stone-900 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-transform active:scale-90">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></svg>
+                            </button>
+                        </div>
+                        <div id="carousel-counter" class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-stone-900/80 text-white text-[10px] font-bold px-3 py-1.5 rounded-full tracking-widest backdrop-blur-md border border-white/10">
+                            1 / ${show.images.length}
+                        </div>
+                    </div>
+                    <div class="md:w-3/5 p-10 md:p-16 flex flex-col justify-between bg-white">
+                        <div>
+                            <span class="text-orange-700 text-[10px] uppercase font-bold tracking-[0.3em] mb-4 block">${show.genre}</span>
+                            <h2 class="text-4xl md:text-5xl font-serif italic mb-6 leading-tight">${show.title}</h2>
+                            <div class="w-12 h-[1px] bg-stone-200 mb-8"></div>
+                            <p class="text-stone-600 font-light leading-relaxed text-base md:text-lg mb-10 italic">"${show.fullContent}"</p>
+                        </div>
+                        <div class="flex flex-col gap-3 pt-8 border-t border-stone-100">
+                            <a href="${show.videoUrl}" class="w-full bg-stone-900 text-white text-[10px] uppercase tracking-widest font-bold py-4 px-6 rounded-xl text-center hover:bg-orange-700 transition flex items-center justify-center gap-2">Voir le Teaser</a>
+                            <div class="flex gap-3">
+                                <a href="javascript:void(0)" onclick="closeModal(); showPage('presskits')" class="flex-1 border border-stone-200 text-stone-600 text-[10px] uppercase tracking-widest font-bold py-4 px-6 rounded-xl text-center hover:border-orange-700 hover:text-orange-700 transition">Press Kit</a>
+                                <a href="javascript:void(0)" onclick="closeModal(); showPage('booking')" class="flex-1 border border-stone-200 text-stone-600 text-[10px] uppercase tracking-widest font-bold py-4 px-6 rounded-xl text-center hover:border-orange-700 hover:text-orange-700 transition">Booking</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            const modal = document.getElementById('showModal');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('active'), 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('showModal');
+            modal.classList.remove('active');
+            setTimeout(() => { modal.style.display = 'none'; document.body.style.overflow = 'auto'; }, 300);
+        }
+
+        // --- Autres Pages ---
+
+        function renderAuteur() {
+            document.getElementById('content-area').innerHTML = `
+                <section class="page-transition max-w-5xl mx-auto px-6 py-24">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center bg-white p-8 md:p-12 rounded-3xl border border-stone-100 shadow-sm">
+                        <div class="relative group">
+                            <div class="absolute inset-0 bg-stone-900 rounded-2xl rotate-3 scale-95 opacity-5 transition-transform group-hover:rotate-0"></div>
+                            <div class="relative bg-stone-200 aspect-[3/4] rounded-2xl overflow-hidden shadow-xl">
+                                 <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000" class="w-full h-full object-cover grayscale" alt="Gabriel Francès">
+                            </div>
+                        </div>
+                        <div class="space-y-6">
+                            <span class="text-orange-700 uppercase tracking-[0.3em] text-[10px] font-black">L'Auteur</span>
+                            <h1 class="text-5xl font-serif italic tracking-tight">Gabriel Francès</h1>
+                            <div class="w-12 h-[1px] bg-stone-200"></div>
+                            <p class="text-stone-600 font-light leading-relaxed text-lg italic">
+                                "Le théâtre est le seul lieu où l'on peut encore mentir pour dire la vérité."
+                            </p>
+                            <p class="text-stone-600 font-light leading-relaxed">
+                                Directeur de Production basé entre Paris et Lyon. Gabriel Francès accompagne les talents du théâtre contemporain avec une vision claire : l'audace artistique au service du public.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderTournee() {
+            document.getElementById('content-area').innerHTML = `
+                <section class="page-transition max-w-5xl mx-auto px-6 py-24">
+                    <div class="text-center mb-16">
+                        <h1 class="text-6xl font-serif italic mb-4 tracking-tight">Calendrier de Tournée</h1>
+                        <p class="text-stone-400 text-[10px] uppercase tracking-[0.3em]">Saison 2024 / 2025</p>
+                    </div>
+                    <div class="space-y-4">
+                        ${dates.map(item => `
+                            <div class="flex flex-col md:flex-row items-center justify-between p-8 bg-white border border-stone-100 rounded-2xl hover:shadow-lg transition-all group">
+                                <div class="text-center md:text-left">
+                                    <h3 class="text-2xl font-serif italic group-hover:text-orange-700 transition">${item.show}</h3>
+                                    <p class="text-stone-400 text-[10px] uppercase tracking-widest mt-1">${item.venue} — ${item.city}</p>
+                                </div>
+                                <div class="mt-4 md:mt-0 text-orange-700 font-bold tracking-widest uppercase text-xs border border-orange-100 px-4 py-2 rounded-full">${item.date}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderPressKits() {
+            document.getElementById('content-area').innerHTML = `
+                <section class="page-transition max-w-6xl mx-auto px-6 py-24">
+                    <div class="text-center mb-16">
+                        <span class="text-orange-700 uppercase tracking-[0.4em] text-[10px] font-bold mb-4 block">Espace Pro</span>
+                        <h1 class="text-6xl font-serif italic mb-4">Ressources & Presse</h1>
+                    </div>
+                    <div class="grid grid-cols-1 gap-8">
+                        ${shows.map(show => `
+                            <div class="bg-white border border-stone-100 rounded-3xl overflow-hidden shadow-sm flex flex-col md:flex-row items-stretch">
+                                <div class="w-full md:w-64 bg-stone-100">
+                                    <img src="${show.images[0]}" class="w-full h-full object-cover grayscale">
+                                </div>
+                                <div class="flex-1 p-8 flex flex-col md:flex-row justify-between items-center gap-8">
+                                    <div>
+                                        <span class="text-orange-700 text-[9px] uppercase font-bold tracking-[0.3em]">${show.genre}</span>
+                                        <h2 class="text-3xl font-serif italic mt-1">${show.title}</h2>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-3 w-full md:w-auto">
+                                        <button class="bg-stone-50 border border-stone-100 p-4 rounded-xl text-[9px] uppercase font-bold hover:bg-orange-700 hover:text-white transition">Dossier Presse</button>
+                                        <button class="bg-stone-50 border border-stone-100 p-4 rounded-xl text-[9px] uppercase font-bold hover:bg-orange-700 hover:text-white transition">Photos HD</button>
+                                        <button class="bg-stone-50 border border-stone-100 p-4 rounded-xl text-[9px] uppercase font-bold hover:bg-orange-700 hover:text-white transition">Affiche</button>
+                                        <button class="bg-stone-50 border border-stone-100 p-4 rounded-xl text-[9px] uppercase font-bold hover:bg-orange-700 hover:text-white transition">Fiche Tech</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderBooking() {
+            document.getElementById('content-area').innerHTML = `
+                <section class="page-transition max-w-4xl mx-auto px-6 py-24">
+                    <div class="text-center mb-16">
+                        <span class="text-orange-700 uppercase tracking-[0.4em] text-[10px] font-bold mb-4 block">Collaboration</span>
+                        <h1 class="text-6xl font-serif italic mb-6">Booking Pro</h1>
+                        <p class="text-stone-400 max-w-md mx-auto leading-relaxed">Pour toute demande de programmation, diffusion ou partenariat, merci de compléter ce formulaire simplifié.</p>
+                    </div>
+                    <form onsubmit="handleBookingSubmit(event)" class="bg-white p-8 md:p-12 rounded-3xl border border-stone-100 shadow-sm space-y-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="space-y-2">
+                                <label class="text-[10px] uppercase tracking-widest font-bold text-stone-400 ml-1">Nom Complet</label>
+                                <input type="text" placeholder="Gabriel Francès" required class="w-full bg-stone-50 border border-stone-100 rounded-xl px-5 py-4 text-sm focus:bg-white focus:ring-1 focus:ring-orange-700 transition-all outline-none">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[10px] uppercase tracking-widest font-bold text-stone-400 ml-1">Email Professionnel</label>
+                                <input type="email" placeholder="contact@votre-structure.com" required class="w-full bg-stone-50 border border-stone-100 rounded-xl px-5 py-4 text-sm focus:bg-white focus:ring-1 focus:ring-orange-700 transition-all outline-none">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="space-y-2">
+                                <label class="text-[10px] uppercase tracking-widest font-bold text-stone-400 ml-1">Structure / Théâtre</label>
+                                <input type="text" placeholder="Nom de votre lieu ou compagnie" class="w-full bg-stone-50 border border-stone-100 rounded-xl px-5 py-4 text-sm focus:bg-white focus:ring-1 focus:ring-orange-700 transition-all outline-none">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[10px] uppercase tracking-widest font-bold text-stone-400 ml-1">Date ou période envisagée</label>
+                                <input type="text" placeholder="Ex: Saison 25/26, Décembre 2025..." class="w-full bg-stone-50 border border-stone-100 rounded-xl px-5 py-4 text-sm focus:bg-white focus:ring-1 focus:ring-orange-700 transition-all outline-none">
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-[10px] uppercase tracking-widest font-bold text-stone-400 ml-1">Votre message</label>
+                            <textarea rows="6" placeholder="Détails de votre demande, jauge, conditions techniques..." required class="w-full bg-stone-50 border border-stone-100 rounded-xl px-5 py-4 text-sm focus:bg-white focus:ring-1 focus:ring-orange-700 transition-all outline-none resize-none"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full bg-stone-900 text-white text-[11px] uppercase tracking-[0.3em] font-bold py-5 rounded-full hover:bg-orange-700 transition-all shadow-2xl shadow-stone-200/50 transform active:scale-[0.98]">
+                            Envoyer la demande pro
+                        </button>
+                    </form>
+                    <div id="success-msg" class="hidden mt-8 p-6 bg-emerald-50 border border-emerald-100 text-emerald-800 rounded-2xl text-center font-medium animate-pulse">
+                        Votre demande a été transmise à GF Productions. Nous reviendrons vers vous sous 48h.
+                    </div>
+                </section>
+            `;
+        }
+
+        // --- Navigation Logic ---
+
+        function handleBookingSubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+            const successMsg = document.getElementById('success-msg');
+            form.style.opacity = '0.5';
+            form.style.pointerEvents = 'none';
+            setTimeout(() => {
+                form.reset();
+                form.style.opacity = '1';
+                form.style.pointerEvents = 'auto';
+                successMsg.classList.remove('hidden');
+                setTimeout(() => successMsg.classList.add('hidden'), 6000);
+            }, 1200);
+        }
+
+        function showPage(page) {
+            if (page === 'home') renderHome();
+            else if (page === 'auteur') renderAuteur();
+            else if (page === 'tournee') renderTournee();
+            else if (page === 'presskits') renderPressKits();
+            else if (page === 'booking') renderBooking();
+            window.scrollTo(0, 0);
+        }
+
+        // Lancement au chargement
+        window.onload = renderHome;
+        window.onclick = function(e) { if (e.target.id == 'showModal') closeModal(); }
+    </script>
 </body>
 </html>
