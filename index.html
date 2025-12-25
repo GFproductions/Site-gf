@@ -3,6 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GF Productions - Direction Artistique, Production et Diffusion de spectacles vivants par Gabriel Francès.">
+    <meta property="og:title" content="GF Productions | Gabriel Francès">
+    <meta property="og:description" content="Production et Diffusion de spectacles vivants">
+    
+    <!-- Favicon (Logo lettres GF) -->
+    <link rel="icon" type="image/png" href="Logo-GF-lettres.png">
+    
     <title>GF Productions | Gabriel Francès</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,450 +20,616 @@
         h1, h2, h3, .font-serif { font-family: 'Playfair Display', serif; }
         .font-signature { font-family: 'Caveat', cursive; }
         
-        .page-transition { animation: fadeIn 0.8s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        :root {
+            --sienna: #b45309;
+            --sienna-btn: #c2410c;
+        }
+
+        .page-transition { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { 
+            from { opacity: 0; } 
+            to { opacity: 1; } 
+        }
         
         .img-container img { transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease; }
         .group:hover .img-container img { transform: scale(1.05); filter: grayscale(0); }
         
         .modal { transition: all 0.3s ease; display: none; opacity: 0; }
         .modal.active { display: flex; opacity: 1; }
-
-        .logo-demo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #1c1917;
-            color: white;
-            font-family: 'Playfair Display', serif;
-            font-weight: bold;
-            border-radius: 4px;
-        }
-
-        .carousel-img { transition: opacity 0.4s ease-in-out; }
-
+        
+        .nav-logo-img { height: 2.2rem; width: auto; transition: transform 0.3s ease; }
+        .nav-logo-img:hover { transform: scale(1.05); }
+        
+        #mobile-menu { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform: translateX(100%); }
+        #mobile-menu.open { transform: translateX(0); }
+        
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #faf9f6; }
         ::-webkit-scrollbar-thumb { background: #e7e5e4; border-radius: 10px; }
+
+        .social-link { transition: all 0.3s ease; opacity: 0.5; }
+        .social-link:hover { opacity: 1; transform: translateY(-2px); color: var(--sienna); }
+
+        .carousel-item { 
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 0;
+        }
+        .carousel-item.active { 
+            opacity: 1;
+            z-index: 10;
+        }
+        .dot { transition: all 0.3s ease; }
+        .dot.active { width: 1.5rem; background-color: white; }
+
+        .testimonial-slide {
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: absolute;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        .testimonial-slide.active {
+            opacity: 1;
+            transform: translateY(0);
+            position: relative;
+        }
+
+        /* Styles Carrousel Partenaires */
+        #partners-carousel {
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        #partners-carousel::-webkit-scrollbar { display: none; }
+        .partner-card { scroll-snap-align: start; }
+        /* Suppression de l'effet de survol (translateY) demandé */
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="bg-[#faf9f6] text-stone-900">
+<body class="bg-[#faf9f6] text-stone-900 overflow-x-hidden">
 
-    <!-- Navigation -->
     <header>
-        <nav class="fixed w-full z-50 bg-white/70 backdrop-blur-lg border-b border-stone-100">
+        <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-lg border-b border-stone-100">
             <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-                <div class="text-xl font-serif font-bold tracking-tighter cursor-pointer flex items-center gap-3" onclick="showPage('home')">
-                    <div class="logo-demo h-8 w-8 text-[10px]">GF</div>
-                    <span>PRODUCTIONS</span>
-                </div>
+                <button type="button" class="flex items-center gap-4 group" onclick="app.navigate('home')">
+                    <img src="Logo-GF-lettres.png" alt="GF" class="nav-logo-img" onerror="this.src='https://via.placeholder.com/40?text=GF'">
+                    <span class="text-xl font-serif font-bold tracking-tighter group-hover:text-[#b45309] transition-colors">PRODUCTIONS</span>
+                </button>
+                
                 <div class="hidden md:flex space-x-8 font-medium text-[10px] uppercase tracking-[0.2em] items-center text-stone-500">
-                    <a href="javascript:void(0)" onclick="showPage('home')" class="hover:text-orange-700 transition">Catalogue</a>
-                    <a href="javascript:void(0)" onclick="showPage('auteur')" class="hover:text-orange-700 transition">L'Auteur</a>
-                    <a href="javascript:void(0)" onclick="showPage('tournee')" class="hover:text-orange-700 transition">Tournée</a>
-                    <a href="javascript:void(0)" onclick="showPage('presskits')" class="hover:text-orange-700 transition">Press Kits</a>
-                    <a href="javascript:void(0)" onclick="showPage('booking')" class="bg-stone-900 text-white px-6 py-3 rounded-full hover:bg-orange-700 transition shadow-lg shadow-stone-200">Booking Pro</a>
+                    <button type="button" onclick="app.navigate('home')" id="nav-home" class="transition-all duration-300">Accueil</button>
+                    <button type="button" onclick="app.navigate('auteur')" id="nav-auteur" class="hover:text-[#b45309] transition-colors">L'Auteur</button>
+                    <button type="button" onclick="app.navigate('presskits')" id="nav-presskits" class="hover:text-[#b45309] transition-colors">Press Kits</button>
+                    <button type="button" onclick="app.navigate('booking')" class="bg-[#c2410c] text-white px-6 py-3 rounded-full hover:bg-stone-900 transition-colors shadow-lg">Booking Pro</button>
                 </div>
+                
+                <button type="button" class="md:hidden text-stone-900 p-2" onclick="app.toggleMenu()">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
             </div>
         </nav>
+
+        <div id="mobile-menu" class="fixed inset-0 z-[60] bg-white flex flex-col p-10 md:hidden">
+            <div class="flex justify-end">
+                <button type="button" onclick="app.toggleMenu()" class="text-3xl text-stone-400">✕</button>
+            </div>
+            <nav class="flex flex-col gap-8 mt-12 text-2xl font-serif italic text-stone-900">
+                <button type="button" onclick="app.navigate('home'); app.toggleMenu()" class="hover:text-[#b45309]">Accueil</button>
+                <button type="button" onclick="app.navigate('auteur'); app.toggleMenu()" class="hover:text-[#b45309]">L'Auteur</button>
+                <button type="button" onclick="app.navigate('presskits'); app.toggleMenu()" class="hover:text-[#b45309]">Press Kits</button>
+                <button type="button" onclick="app.navigate('booking'); app.toggleMenu()" class="mt-4 bg-[#c2410c] text-white text-base py-4 rounded-xl font-bold uppercase not-italic hover:bg-stone-900">Booking Pro</button>
+            </nav>
+        </div>
     </header>
 
-    <!-- Zone de contenu -->
-    <main id="content-area" class="pt-20">
-        <!-- Rendu dynamique par JS -->
-    </main>
+    <main id="content-area" class="pt-20 min-h-[80vh]"></main>
 
-    <!-- Pied de page avec Réseaux Sociaux -->
-    <footer class="bg-white border-t border-stone-100 pt-20 pb-12 px-6 mt-20">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 items-center pb-16 border-b border-stone-100">
-                <!-- Branding -->
-                <div class="flex flex-col items-center md:items-start gap-4">
-                    <div class="flex items-center gap-3">
-                        <div class="logo-demo h-8 w-8 text-[10px]">GF</div>
-                        <div class="font-serif font-bold text-stone-900 text-lg italic">GF Productions</div>
-                    </div>
-                    <p class="text-[10px] uppercase tracking-[0.3em] text-stone-400 text-center md:text-left">
-                        Production • Diffusion • Direction Artistique
-                    </p>
-                </div>
+    <footer class="bg-white border-t border-stone-100 pt-16 pb-12 px-6 mt-10 text-center md:text-left">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-center pb-12 border-b border-stone-100 text-stone-500 uppercase text-[10px] font-bold tracking-widest">
+            <div class="flex items-center justify-center md:justify-start gap-4 group cursor-pointer" onclick="app.navigate('home')">
+                <img src="Logo-GF-lettres.png" alt="GF" class="h-7 w-auto" onerror="this.src='https://via.placeholder.com/30?text=GF'">
+                <span class="text-[9px] group-hover:text-[#b45309] transition-colors">GF Productions</span>
+            </div>
 
-                <!-- Réseaux Sociaux -->
-                <div class="flex flex-col items-center gap-6">
-                    <span class="text-[10px] uppercase tracking-[0.4em] font-bold text-stone-500">Suivez-nous</span>
-                    <div class="flex gap-8">
-                        <a href="https://instagram.com/gf.productions" target="_blank" class="text-stone-400 hover:text-orange-700 transition-colors" title="Instagram">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                        </a>
-                        <a href="https://www.facebook.com/profile.php?id=61585318691464$0" target="_blank" class="text-stone-400 hover:text-orange-700 transition-colors" title="Facebook">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Navigation Rapide -->
-                <div class="flex flex-col items-center md:items-end gap-3 text-[10px] uppercase tracking-widest font-semibold text-stone-500">
-                    <a href="javascript:void(0)" onclick="showPage('home')" class="hover:text-orange-700">Catalogue</a>
-                    <a href="javascript:void(0)" onclick="showPage('tournee')" class="hover:text-orange-700">Tournée</a>
-                    <a href="javascript:void(0)" onclick="showPage('booking')" class="hover:text-orange-700">Contact Booking</a>
+            <div class="flex flex-col items-center gap-4">
+                <span class="text-[9px] tracking-[0.3em] opacity-80">Suivez-nous</span>
+                <div class="flex gap-6">
+                    <a href="https://instagram.com" target="_blank" class="social-link" aria-label="Instagram">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    </a>
+                    <a href="https://facebook.com" target="_blank" class="social-link" aria-label="Facebook">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    </a>
                 </div>
             </div>
 
-            <div class="mt-12 flex flex-col md:flex-row justify-between items-center gap-4 text-stone-400 text-[9px] uppercase tracking-widest">
-                <p>&copy; 2024 GF Productions. Tous droits réservés.</p>
-                <div class="flex gap-8">
-                    <a href="#" class="hover:text-stone-900 transition-colors">Mentions Légales</a>
-                    <a href="#" class="hover:text-stone-900 transition-colors">Cookies</a>
-                </div>
+            <div class="flex justify-center md:justify-end gap-6 text-[9px]">
+                <button onclick="app.navigate('home')" class="hover:text-[#b45309] transition-colors">Catalogue</button>
+                <button onclick="app.navigate('booking')" class="hover:text-[#b45309] transition-colors">Contact</button>
             </div>
+        </div>
+
+        <div class="mt-8 flex flex-col md:flex-row justify-between items-center text-stone-400 text-[8px] uppercase tracking-widest gap-4">
+            <p>&copy; 2025 GF Productions. Tous droits réservés.</p>
+            <button onclick="app.navigate('mentions')" class="hover:text-[#b45309] transition-colors underline decoration-stone-200 underline-offset-4">Mentions Légales</button>
         </div>
     </footer>
 
-    <!-- Modale de détail spectacle -->
-    <div id="showModal" class="modal fixed inset-0 z-[100] bg-stone-900/60 flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white max-w-5xl w-full max-h-[90vh] overflow-y-auto relative shadow-2xl rounded-3xl border border-stone-100">
-            <button onclick="closeModal()" class="fixed md:absolute top-6 right-6 bg-white md:bg-stone-100 p-2 rounded-full shadow-md text-stone-400 hover:text-black text-2xl z-50 transition-all hover:rotate-90">✕</button>
-            <div id="modal-body"></div>
+    <!-- Fenêtre Modale (Spectacles) -->
+    <div id="showModal" class="modal fixed inset-0 z-[100] bg-stone-900/60 flex items-center justify-center p-4 backdrop-blur-sm" onclick="if(event.target===this) app.closeModal()">
+        <div class="bg-white max-w-5xl w-full max-h-[95vh] overflow-hidden relative shadow-2xl rounded-3xl border border-stone-100 flex flex-col md:flex-row">
+            <button type="button" onclick="app.closeModal()" class="absolute top-6 right-6 bg-white/90 backdrop-blur-md p-2 rounded-full shadow-lg text-stone-400 hover:text-[#b45309] text-xl z-[110] transition">✕</button>
+            
+            <div class="md:w-1/2 relative bg-stone-200 aspect-square md:aspect-auto overflow-hidden">
+                <div id="carousel-container" class="w-full h-full relative"></div>
+                <div class="absolute inset-0 flex items-center justify-between px-4 z-20 pointer-events-none">
+                    <button onclick="app.carouselPrev(event)" class="pointer-events-auto bg-white/40 hover:bg-white text-stone-900 hover:text-[#b45309] w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md shadow-lg transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+                    <button onclick="app.carouselNext(event)" class="pointer-events-auto bg-white/40 hover:bg-white text-stone-900 hover:text-[#b45309] w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md shadow-lg transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+                <div id="carousel-dots" class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20"></div>
+            </div>
+
+            <div class="md:w-1/2 p-8 md:p-16 flex flex-col justify-center bg-white overflow-y-auto relative">
+                <div id="modal-content"></div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Configuration des spectacles
-        const shows = [
-            { 
-                id: 'spectacle-1', 
-                title: "L'Ombre du Silence", 
-                genre: "Drame Contemporain", 
-                images: [
-                    "https://images.unsplash.com/photo-1503095396549-807039045349?q=80&w=1000",
-                    "https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?q=80&w=1000",
-                    "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=1000",
-                    "https://images.unsplash.com/photo-1533488765986-dfa2a9939acd?q=80&w=1000"
-                ],
-                fullContent: "L'Ombre du Silence est une pièce magistrale qui interroge la place de la mémoire à travers les non-dits d'une famille déchirée. Une mise en scène épurée qui laisse toute la place à l'émotion brute des acteurs.",
-                videoUrl: "#",
-                pressKitUrl: "#",
-                techSheetUrl: "#"
+        const app = {
+            state: { view: 'home', id: null, carouselIndex: 0, testimonialIndex: 0 },
+            testimonialInterval: null,
+            
+            shows: [
+                { 
+                    id: 'couscous-elysee', 
+                    title: "Du couscous à L'Elysée", 
+                    genre: "Comédie Sociale", 
+                    poster: "https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?q=80&w=1000",
+                    images: [
+                        "https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?q=80&w=1000",
+                        "https://images.unsplash.com/photo-1503095396549-807039045349?q=80&w=1000",
+                        "https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=1000",
+                        "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=2000"
+                    ], 
+                    content: "Une comédie savoureuse qui bouscule les codes et les préjugés avec humour et humanité.",
+                    teaser: "https://www.youtube.com",
+                    testimonials: [
+                        { text: "Un régal absolu, une comédie qui fait du bien au moral !", author: "Sarah M. (BilletReduc)" },
+                        { text: "Les dialogues sont ciselés, on ne s'ennuie pas une seconde.", author: "Thomas L. (Critique)" },
+                        { text: "Une vraie bouffée d'air frais dans le paysage théâtral.", author: "Julie D. sur BilletReduc" }
+                    ]
+                },
+                { 
+                    id: 'laughter-bursts', 
+                    title: "Éclats de Rire", 
+                    genre: "Comédie de Boulevard", 
+                    poster: "https://images.unsplash.com/photo-1514302240734-41cf3c2c4a05?q=80&w=1000",
+                    images: [
+                        "https://images.unsplash.com/photo-1514302240734-41cf3c2c4a05?q=80&w=1000",
+                        "https://images.unsplash.com/photo-1525921429624-479b6a29d84c?q=80&w=1000",
+                        "https://images.unsplash.com/photo-1481412815593-01968819449a?q=80&w=1000",
+                        "https://images.unsplash.com/photo-1524708215034-722668516d2e?q=80&w=1000"
+                    ], 
+                    content: "Une tornade de quiproquos et de rires servis par une mise en scène audacieuse.",
+                    teaser: "https://www.youtube.com",
+                    testimonials: []
+                }
+            ],
+
+            init() { this.render(); },
+
+            navigate(view, id = null) {
+                this.state.view = view;
+                this.state.id = id;
+                this.render();
             },
-            { 
-                id: 'spectacle-2', 
-                title: "Éclats de Rire", 
-                genre: "Comédie de Boulevard", 
-                images: [
-                    "https://images.unsplash.com/photo-1514302240734-41cf3c2c4a05?q=80&w=1000",
-                    "https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=1000",
-                    "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=1000",
-                    "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1000"
-                ], 
-                fullContent: "Une comédie brillante dans la pure tradition du boulevard, revisitée avec une énergie moderne. Quiproquos, rythme effréné et rires garantis pour cette production coup de cœur.",
-                videoUrl: "#",
-                pressKitUrl: "#",
-                techSheetUrl: "#"
+
+            updateActiveNav() {
+                const views = ['home', 'auteur', 'presskits'];
+                views.forEach(v => {
+                    const el = document.getElementById(`nav-${v}`);
+                    if (!el) return;
+                    if (this.state.view === v) {
+                        el.classList.add('text-[#b45309]', 'font-bold', 'border-b', 'border-[#b45309]', 'pb-0.5');
+                        el.classList.remove('text-stone-500');
+                    } else {
+                        el.classList.remove('text-[#b45309]', 'font-bold', 'border-b', 'border-[#b45309]', 'pb-0.5');
+                        el.classList.add('text-stone-500');
+                    }
+                });
             },
-            { 
-                id: 'spectacle-3', 
-                title: "Le Dernier Acte", 
-                genre: "Tragi-comédie", 
-                images: [
-                    "https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=1000",
-                    "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=1000",
-                    "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1000",
-                    "https://images.unsplash.com/photo-1460723237483-7a6dc9d0b212?q=80&w=1000"
-                ], 
-                fullContent: "Un hommage vibrant aux gens de scène, entre rires et larmes. Ce spectacle explore les coulisses d'un théâtre en faillite où la passion reste le dernier rempart contre l'oubli.",
-                videoUrl: "#",
-                pressKitUrl: "#",
-                techSheetUrl: "#"
-            }
-        ];
 
-        // Calendrier
-        const dates = [
-            { date: "15 Oct 2024", show: "L'Ombre du Silence", venue: "Théâtre des Célestins", city: "Lyon" },
-            { date: "22 Oct 2024", show: "Éclats de Rire", venue: "Théâtre de la Gaîté", city: "Paris" },
-            { date: "05 Nov 2024", show: "Le Dernier Acte", venue: "Le Quai", city: "Angers" },
-            { date: "12 Nov 2024", show: "L'Ombre du Silence", venue: "Théâtre National", city: "Strasbourg" },
-            { date: "18 Nov 2024", show: "Éclats de Rire", venue: "Odyssud", city: "Blagnac" }
-        ];
+            render() {
+                const { view, id } = this.state;
+                this.updateActiveNav();
+                window.scrollTo(0, 0);
+                
+                if (view === 'spectacle' && id) {
+                    this.openModal(id);
+                } else {
+                    this.hideModalUI();
+                    const container = document.getElementById('content-area');
+                    switch(view) {
+                        case 'home': this.viewHome(container); break;
+                        case 'auteur': this.viewAuteur(container); break;
+                        case 'presskits': this.viewPress(container); break;
+                        case 'booking': this.viewBooking(container); break;
+                        case 'mentions': this.viewMentions(container); break;
+                        default: this.viewHome(container);
+                    }
+                }
+            },
 
-        let currentImageIndex = 0;
-        let currentShowImages = [];
-
-        // --- Fonctions de Rendu ---
-
-        function renderHome() {
-            const html = `
-                <section class="page-transition">
-                    <div class="relative h-[45vh] flex flex-col items-center justify-center bg-stone-100 overflow-hidden border-b border-stone-200">
-                        <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=2000" class="absolute inset-0 w-full h-full object-cover opacity-10" alt="Scène">
-                        <div class="relative z-10 text-center px-6 flex flex-col items-center">
-                            <div class="logo-demo h-24 w-24 mb-10 opacity-20 text-xl grayscale shadow-md ring-1 ring-stone-900/5">GF</div>
-                            <span class="text-orange-700 uppercase tracking-[0.4em] text-[10px] font-bold mb-3 block">Production de Spectacles Vivants</span>
-                            <h1 class="text-5xl md:text-7xl font-serif italic text-stone-900 tracking-tight">Faisons la Comédie</h1>
+            viewHome(container) {
+                container.innerHTML = `
+                    <section class="page-transition">
+                        <div class="relative h-[42vh] flex flex-col items-center justify-center bg-stone-100 overflow-visible">
+                            <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=2000" class="absolute inset-0 w-full h-full object-cover opacity-15" alt="Scène">
+                            <div class="relative z-10 text-center px-6 flex flex-col items-center">
+                                <img src="Logo GF carré.png" alt="Logo GF Productions" class="h-24 w-auto mb-6 opacity-95 drop-shadow-md" onerror="this.src='https://via.placeholder.com/200?text=Logo+GF'">
+                                <span class="text-[11px] md:text-[13px] uppercase tracking-[0.4em] text-[#b45309] font-bold mb-3 block drop-shadow-sm">Production de spectacles vivants</span>
+                                <h1 class="text-3xl md:text-4xl font-serif italic text-stone-900 leading-tight">Faisons la Comédie</h1>
+                            </div>
+                            <button onclick="document.getElementById('note-auteur').scrollIntoView({behavior: 'smooth', block: 'center'})" 
+                                    class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-20 bg-[#c2410c] text-white px-8 py-5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-stone-900 transition-colors shadow-2xl border border-white/10 whitespace-nowrap">
+                                Découvrez le catalogue
+                            </button>
                         </div>
-                    </div>
 
-                    <div class="flex justify-center -translate-y-1/2 relative z-20">
-                        <button onclick="document.getElementById('catalogue-anchor').scrollIntoView({behavior:'smooth'})" class="border border-stone-200 hover:border-orange-700 hover:text-orange-700 transition-all px-8 py-4 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold group bg-white shadow-xl shadow-stone-200/50">
-                            Découvrir le catalogue ↓
-                        </button>
-                    </div>
-
-                    <div id="catalogue-anchor" class="max-w-7xl mx-auto px-6 py-24 text-center">
-                        <h2 class="text-5xl font-serif italic mb-6">Catalogue des Spectacles</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-16 mt-16">
-                            ${shows.map(show => `
-                                <article class="group cursor-pointer" onclick="openModal('${show.id}')">
-                                    <div class="img-container aspect-[3/4] overflow-hidden bg-stone-200 mb-8 rounded-xl shadow-sm border border-stone-100">
-                                        <img src="${show.images[0]}" class="w-full h-full object-cover grayscale group-hover:grayscale-0">
+                        <div id="note-auteur" class="max-w-4xl mx-auto px-6 pt-20 pb-16 text-center">
+                            <div class="inline-block mb-8">
+                                <span class="text-[11px] uppercase tracking-[0.5em] text-[#b45309] font-bold mb-2 block">L'Intention Artistique</span>
+                                <div class="h-px w-12 bg-[#b45309]/30 mx-auto"></div>
+                            </div>
+                            <p class="text-lg md:text-xl text-stone-600 leading-relaxed font-light italic mb-10">
+                                "Chaque spectacle est une rencontre, un souffle partagé entre la scène et la salle. Mon engagement est de produire des œuvres qui interrogent, émeuvent et surtout, célèbrent le rire ensemble."
+                            </p>
+                            <div class="flex flex-col items-center gap-2">
+                                <p class="text-stone-900 font-semibold uppercase tracking-widest text-[11px]">Gabriel Francès</p>
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Jon_Kirsch_Signature.png" class="h-12 w-auto opacity-70 grayscale contrast-125 brightness-50" alt="Signature">
+                            </div>
+                        </div>
+                        
+                        <div id="catalogue-section" class="max-w-7xl mx-auto px-6 pt-20 pb-6 grid grid-cols-1 md:grid-cols-2 gap-16">
+                            ${this.shows.map(s => `
+                                <article class="group cursor-pointer" onclick="app.navigate('spectacle', '${s.id}')">
+                                    <div class="img-container aspect-[16/9] md:aspect-[3/4] overflow-hidden bg-stone-200 mb-8 rounded-xl shadow-sm group-hover:shadow-orange-100 group-hover:shadow-xl transition-all">
+                                        <img src="${s.images[0]}" class="w-full h-full object-cover grayscale group-hover:grayscale-0" alt="${s.title}">
                                     </div>
-                                    <h3 class="text-3xl font-serif italic">${show.title}</h3>
+                                    <h3 class="text-2xl font-serif italic group-hover:text-[#b45309] transition-colors">${s.title}</h3>
+                                    <p class="text-[10px] uppercase tracking-widest text-stone-400 mt-2">${s.genre}</p>
                                 </article>
                             `).join('')}
                         </div>
-                    </div>
-                </section>
-            `;
-            document.getElementById('content-area').innerHTML = html;
-        }
 
-        // --- Gestion Carrousel ---
-
-        function updateCarousel() {
-            const imgElement = document.getElementById('carousel-main-img');
-            const counterElement = document.getElementById('carousel-counter');
-            if (imgElement) {
-                imgElement.style.opacity = '0';
-                setTimeout(() => {
-                    imgElement.src = currentShowImages[currentImageIndex];
-                    imgElement.style.opacity = '1';
-                    if (counterElement) counterElement.innerText = `${currentImageIndex + 1} / ${currentShowImages.length}`;
-                }, 150);
-            }
-        }
-
-        function nextImage(event) {
-            event.stopPropagation();
-            currentImageIndex = (currentImageIndex + 1) % currentShowImages.length;
-            updateCarousel();
-        }
-
-        function prevImage(event) {
-            event.stopPropagation();
-            currentImageIndex = (currentImageIndex - 1 + currentShowImages.length) % currentShowImages.length;
-            updateCarousel();
-        }
-
-        // --- Gestion Modale ---
-
-        function openModal(showId) {
-            const show = shows.find(s => s.id === showId);
-            currentShowImages = show.images;
-            currentImageIndex = 0;
-
-            document.getElementById('modal-body').innerHTML = `
-                <div class="flex flex-col md:flex-row items-stretch min-h-[600px]">
-                    <div class="md:w-2/5 bg-stone-100 relative overflow-hidden flex items-center justify-center min-h-[450px] group/carousel">
-                        <img id="carousel-main-img" src="${show.images[0]}" class="carousel-img w-full h-full object-cover">
-                        <div class="absolute inset-0 flex items-center justify-between px-4 opacity-0 group-hover/carousel:opacity-100 transition-opacity bg-gradient-to-b from-transparent via-transparent to-stone-900/20">
-                            <button onclick="prevImage(event)" class="bg-white/90 hover:bg-white text-stone-900 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-transform active:scale-90">
-                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"></path></svg>
-                            </button>
-                            <button onclick="nextImage(event)" class="bg-white/90 hover:bg-white text-stone-900 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-transform active:scale-90">
-                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></svg>
-                            </button>
-                        </div>
-                        <div id="carousel-counter" class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-stone-900/80 text-white text-[10px] font-bold px-3 py-1.5 rounded-full tracking-widest backdrop-blur-md border border-white/10">
-                            1 / ${show.images.length}
-                        </div>
-                    </div>
-                    <div class="md:w-3/5 p-10 md:p-16 flex flex-col justify-between bg-white">
-                        <div>
-                            <span class="text-orange-700 text-[10px] uppercase font-bold tracking-[0.3em] mb-4 block">${show.genre}</span>
-                            <h2 class="text-4xl md:text-5xl font-serif italic mb-6 leading-tight">${show.title}</h2>
-                            <div class="w-12 h-[1px] bg-stone-200 mb-8"></div>
-                            <p class="text-stone-600 font-light leading-relaxed text-base md:text-lg mb-10 italic">"${show.fullContent}"</p>
-                        </div>
-                        <div class="flex flex-col gap-3 pt-8 border-t border-stone-100">
-                            <a href="${show.videoUrl}" class="w-full bg-stone-900 text-white text-[10px] uppercase tracking-widest font-bold py-4 px-6 rounded-xl text-center hover:bg-orange-700 transition flex items-center justify-center gap-2">Voir le Teaser</a>
-                            <div class="flex gap-3">
-                                <a href="javascript:void(0)" onclick="closeModal(); showPage('presskits')" class="flex-1 border border-stone-200 text-stone-600 text-[10px] uppercase tracking-widest font-bold py-4 px-6 rounded-xl text-center hover:border-orange-700 hover:text-orange-700 transition">Press Kit</a>
-                                <a href="javascript:void(0)" onclick="closeModal(); showPage('booking')" class="flex-1 border border-stone-200 text-stone-600 text-[10px] uppercase tracking-widest font-bold py-4 px-6 rounded-xl text-center hover:border-orange-700 hover:text-orange-700 transition">Booking</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            const modal = document.getElementById('showModal');
-            modal.style.display = 'flex';
-            setTimeout(() => modal.classList.add('active'), 10);
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('showModal');
-            modal.classList.remove('active');
-            setTimeout(() => { modal.style.display = 'none'; document.body.style.overflow = 'auto'; }, 300);
-        }
-
-        // --- Autres Pages ---
-
-        function renderAuteur() {
-            document.getElementById('content-area').innerHTML = `
-                <section class="page-transition max-w-5xl mx-auto px-6 py-24">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center bg-white p-8 md:p-12 rounded-3xl border border-stone-100 shadow-sm">
-                        <div class="relative group">
-                            <div class="absolute inset-0 bg-stone-900 rounded-2xl rotate-3 scale-95 opacity-5 transition-transform group-hover:rotate-0"></div>
-                            <div class="relative bg-stone-200 aspect-[3/4] rounded-2xl overflow-hidden shadow-xl">
-                                 <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000" class="w-full h-full object-cover grayscale" alt="Gabriel Francès">
-                            </div>
-                        </div>
-                        <div class="space-y-6">
-                            <span class="text-orange-700 uppercase tracking-[0.3em] text-[10px] font-black">L'Auteur</span>
-                            <h1 class="text-5xl font-serif italic tracking-tight">Gabriel Francès</h1>
-                            <div class="w-12 h-[1px] bg-stone-200"></div>
-                            <p class="text-stone-600 font-light leading-relaxed text-lg italic">
-                                "Le théâtre est le seul lieu où l'on peut encore mentir pour dire la vérité."
-                            </p>
-                            <p class="text-stone-600 font-light leading-relaxed">
-                                Directeur de Production basé entre Paris et Lyon. Gabriel Francès accompagne les talents du théâtre contemporain avec une vision claire : l'audace artistique au service du public.
-                            </p>
-                        </div>
-                    </div>
-                </section>
-            `;
-        }
-
-        function renderTournee() {
-            document.getElementById('content-area').innerHTML = `
-                <section class="page-transition max-w-5xl mx-auto px-6 py-24">
-                    <div class="text-center mb-16">
-                        <h1 class="text-6xl font-serif italic mb-4 tracking-tight">Calendrier de Tournée</h1>
-                        <p class="text-stone-400 text-[10px] uppercase tracking-[0.3em]">Saison 2024 / 2025</p>
-                    </div>
-                    <div class="space-y-4">
-                        ${dates.map(item => `
-                            <div class="flex flex-col md:flex-row items-center justify-between p-8 bg-white border border-stone-100 rounded-2xl hover:shadow-lg transition-all group">
-                                <div class="text-center md:text-left">
-                                    <h3 class="text-2xl font-serif italic group-hover:text-orange-700 transition">${item.show}</h3>
-                                    <p class="text-stone-400 text-[10px] uppercase tracking-widest mt-1">${item.venue} — ${item.city}</p>
+                        <div class="bg-stone-50 border-y border-stone-100 py-12 px-6 mt-0 overflow-hidden">
+                            <div class="max-w-5xl mx-auto text-center">
+                                <div class="inline-block mb-10">
+                                    <h2 class="text-2xl font-serif italic mb-2">En chiffres</h2>
+                                    <div class="h-px w-8 bg-[#b45309]/30 mx-auto"></div>
                                 </div>
-                                <div class="mt-4 md:mt-0 text-orange-700 font-bold tracking-widest uppercase text-xs border border-orange-100 px-4 py-2 rounded-full">${item.date}</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </section>
-            `;
-        }
 
-        function renderPressKits() {
-            document.getElementById('content-area').innerHTML = `
-                <section class="page-transition max-w-6xl mx-auto px-6 py-24">
-                    <div class="text-center mb-16">
-                        <span class="text-orange-700 uppercase tracking-[0.4em] text-[10px] font-bold mb-4 block">Espace Pro</span>
-                        <h1 class="text-6xl font-serif italic mb-4">Ressources & Presse</h1>
-                    </div>
-                    <div class="grid grid-cols-1 gap-8">
-                        ${shows.map(show => `
-                            <div class="bg-white border border-stone-100 rounded-3xl overflow-hidden shadow-sm flex flex-col md:flex-row items-stretch">
-                                <div class="w-full md:w-64 bg-stone-100">
-                                    <img src="${show.images[0]}" class="w-full h-full object-cover grayscale">
-                                </div>
-                                <div class="flex-1 p-8 flex flex-col md:flex-row justify-between items-center gap-8">
-                                    <div>
-                                        <span class="text-orange-700 text-[9px] uppercase font-bold tracking-[0.3em]">${show.genre}</span>
-                                        <h2 class="text-3xl font-serif italic mt-1">${show.title}</h2>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4 items-start">
+                                    <div class="flex flex-col items-center">
+                                        <span class="text-4xl md:text-5xl font-serif text-[#c2410c] mb-2">4 200 +</span>
+                                        <p class="text-stone-500 uppercase tracking-[0.2em] text-[9px] font-bold max-w-[180px] leading-relaxed">
+                                            Spectateurs depuis Août 2025
+                                        </p>
                                     </div>
-                                    <div class="grid grid-cols-2 gap-3 w-full md:w-auto">
-                                        <button class="bg-stone-50 border border-stone-100 p-4 rounded-xl text-[9px] uppercase font-bold hover:bg-orange-700 hover:text-white transition">Dossier Presse</button>
-                                        <button class="bg-stone-50 border border-stone-100 p-4 rounded-xl text-[9px] uppercase font-bold hover:bg-orange-700 hover:text-white transition">Photos HD</button>
-                                        <button class="bg-stone-50 border border-stone-100 p-4 rounded-xl text-[9px] uppercase font-bold hover:bg-orange-700 hover:text-white transition">Affiche</button>
-                                        <button class="bg-stone-50 border border-stone-100 p-4 rounded-xl text-[9px] uppercase font-bold hover:bg-orange-700 hover:text-white transition">Fiche Tech</button>
+
+                                    <div class="flex flex-col items-center">
+                                        <span class="text-4xl md:text-5xl font-serif text-[#c2410c] mb-2">4 soirs</span>
+                                        <p class="text-stone-500 uppercase tracking-[0.2em] text-[9px] font-bold max-w-[180px] leading-relaxed">
+                                            Par semaine au Théâtre Edgar (Paris)
+                                        </p>
+                                    </div>
+
+                                    <div class="flex flex-col items-center">
+                                        <span class="text-4xl md:text-5xl font-serif text-[#c2410c] mb-2">1<sup>ère</sup></span>
+                                        <p class="text-stone-500 uppercase tracking-[0.2em] text-[9px] font-bold max-w-[180px] leading-relaxed">
+                                            Production et un succès immédiat
+                                        </p>
                                     </div>
                                 </div>
                             </div>
-                        `).join('')}
-                    </div>
-                </section>
-            `;
-        }
+                        </div>
+                    </section>`;
+            },
 
-        function renderBooking() {
-            document.getElementById('content-area').innerHTML = `
-                <section class="page-transition max-w-4xl mx-auto px-6 py-24">
-                    <div class="text-center mb-16">
-                        <span class="text-orange-700 uppercase tracking-[0.4em] text-[10px] font-bold mb-4 block">Collaboration</span>
-                        <h1 class="text-6xl font-serif italic mb-6">Booking Pro</h1>
-                        <p class="text-stone-400 max-w-md mx-auto leading-relaxed">Pour toute demande de programmation, diffusion ou partenariat, merci de compléter ce formulaire simplifié.</p>
-                    </div>
-                    <form onsubmit="handleBookingSubmit(event)" class="bg-white p-8 md:p-12 rounded-3xl border border-stone-100 shadow-sm space-y-8">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div class="space-y-2">
-                                <label class="text-[10px] uppercase tracking-widest font-bold text-stone-400 ml-1">Nom Complet</label>
-                                <input type="text" placeholder="Gabriel Francès" required class="w-full bg-stone-50 border border-stone-100 rounded-xl px-5 py-4 text-sm focus:bg-white focus:ring-1 focus:ring-orange-700 transition-all outline-none">
+            viewAuteur(container) {
+                container.innerHTML = `
+                    <section class="page-transition max-w-7xl mx-auto px-6 pt-24 pb-8">
+                        <div class="flex flex-col md:flex-row gap-16 items-center md:items-center mb-16">
+                            <div class="md:w-5/12">
+                                <div class="aspect-[4/5] bg-stone-200 rounded-[3rem] overflow-hidden shadow-2xl border border-stone-100 group relative">
+                                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1000" 
+                                         class="w-full h-full object-cover transition-all duration-1000" alt="Gabriel Francès">
+                                    <div class="absolute bottom-8 left-8">
+                                        <span class="font-signature text-5xl text-white drop-shadow-lg">Gabriel Francès</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="space-y-2">
-                                <label class="text-[10px] uppercase tracking-widest font-bold text-stone-400 ml-1">Email Professionnel</label>
-                                <input type="email" placeholder="contact@votre-structure.com" required class="w-full bg-stone-50 border border-stone-100 rounded-xl px-5 py-4 text-sm focus:bg-white focus:ring-1 focus:ring-orange-700 transition-all outline-none">
+
+                            <div class="md:w-7/12">
+                                <span class="text-[#b45309] font-bold text-[10px] uppercase tracking-[0.5em] mb-6 block italic">Ma vision</span>
+                                <h2 class="text-3xl md:text-5xl font-serif italic mb-12 leading-tight">« L'humour est une mécanique de précision, mais c'est l'humain qui en est le moteur. »</h2>
+                                <div class="space-y-10 text-xl text-stone-600 font-light leading-relaxed italic border-l-2 border-orange-100 pl-10">
+                                    <p>Je suis sur scène depuis 10 ans. J'ai appris mon métier dans l'arène du stand-up, là où chaque mot compte et où le silence du public est le meilleur professeur.</p>
+                                    <p>Cette exigence du rythme, je l'ai portée sur les ondes de <span class="text-stone-900 font-semibold italic">RTL2</span> pendant mes années de chroniques, avant de réaliser que ma véritable passion résidait dans la structure : créer des univers pour les autres.</p>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div class="space-y-2">
-                                <label class="text-[10px] uppercase tracking-widest font-bold text-stone-400 ml-1">Structure / Théâtre</label>
-                                <input type="text" placeholder="Nom de votre lieu ou compagnie" class="w-full bg-stone-50 border border-stone-100 rounded-xl px-5 py-4 text-sm focus:bg-white focus:ring-1 focus:ring-orange-700 transition-all outline-none">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-24 mb-16 items-center text-left">
+                            <div>
+                                <span class="text-[#b45309] font-bold text-[10px] uppercase tracking-[0.5em] mb-6 block">L'ombre créative</span>
+                                <h3 class="text-3xl font-serif italic mb-8">Écrire pour les autres, c'est endosser leur peau.</h3>
+                                <div class="text-stone-500 space-y-6 text-lg font-light leading-relaxed mb-4">
+                                    <p>Aujourd'hui, au sein de ma société de production, j'accompagne des artistes dont j'admire le talent. Que ce soit pour la plume incisive de <span class="text-stone-900">Lamine Lezghad</span>, l'énergie de <span class="text-stone-900">Romuald Maufras</span> ou l'expérience immense de <span class="text-stone-900">Roland Magdane</span>, mon rôle est de sculpter leur texte pour que l'émotion explose.</p>
+                                    <p>Chaque collaboration est un nouveau défi de dramaturgie. Je ne me contente pas d'écrire des vannes ; je construis des spectacles comme on bâtit des ponts entre l'artiste et son public.</p>
+                                </div>
                             </div>
-                            <div class="space-y-2">
-                                <label class="text-[10px] uppercase tracking-widest font-bold text-stone-400 ml-1">Date ou période envisagée</label>
-                                <input type="text" placeholder="Ex: Saison 25/26, Décembre 2025..." class="w-full bg-stone-50 border border-stone-100 rounded-xl px-5 py-4 text-sm focus:bg-white focus:ring-1 focus:ring-orange-700 transition-all outline-none">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="aspect-square rounded-2xl overflow-hidden bg-stone-100 shadow-lg"><img src="https://images.unsplash.com/photo-1514302240734-41cf3c2c4a05?q=80&w=800" class="w-full h-full object-cover transition" alt="Backstage"></div>
+                                <div class="aspect-square rounded-2xl overflow-hidden bg-stone-100 mt-12 shadow-lg"><img src="https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?q=80&w=800" class="w-full h-full object-cover transition" alt="Writing"></div>
                             </div>
                         </div>
 
-                        <div class="space-y-2">
-                            <label class="text-[10px] uppercase tracking-widest font-bold text-stone-400 ml-1">Votre message</label>
-                            <textarea rows="6" placeholder="Détails de votre demande, jauge, conditions techniques..." required class="w-full bg-stone-50 border border-stone-100 rounded-xl px-5 py-4 text-sm focus:bg-white focus:ring-1 focus:ring-orange-700 transition-all outline-none resize-none"></textarea>
+                        <!-- Section Partenaires & Inspirations - Plus compacte et sans effet hover -->
+                        <div class="max-w-6xl mx-auto px-6">
+                            <div class="relative flex flex-col items-center mb-10">
+                                <span class="text-[#b45309] font-bold text-[10px] uppercase tracking-[0.5em] block italic text-center">Partenaires & Inspirations</span>
+                                <div class="h-px w-10 bg-[#b45309]/30 mt-4"></div>
+                                
+                                <div class="hidden md:flex absolute w-full justify-between items-center top-1/2 translate-y-[200%] px-2 pointer-events-none">
+                                    <button onclick="document.getElementById('partners-carousel').scrollBy({left: -400, behavior: 'smooth'})" 
+                                            class="w-12 h-12 bg-white/90 backdrop-blur-md border border-stone-100 rounded-full flex items-center justify-center hover:bg-[#b45309] hover:text-white transition-all pointer-events-auto shadow-lg z-10">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    </button>
+                                    <button onclick="document.getElementById('partners-carousel').scrollBy({left: 400, behavior: 'smooth'})" 
+                                            class="w-12 h-12 bg-white/90 backdrop-blur-md border border-stone-100 rounded-full flex items-center justify-center hover:border-[#b45309] hover:text-white transition-all pointer-events-auto shadow-lg z-10">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="partners-carousel" class="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-4 no-scrollbar">
+                                <div class="partner-card w-[80%] md:w-[calc(33.33%-1rem)] aspect-[4/5] bg-stone-200 rounded-[2.5rem] overflow-hidden shadow-xl snap-start shrink-0 relative">
+                                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800" class="w-full h-full object-cover" alt="Lamine Lezghad">
+                                    <div class="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-stone-900/70 to-transparent">
+                                        <p class="text-white text-[10px] md:text-[11px] uppercase font-bold tracking-[0.2em]">Lamine Lezghad</p>
+                                    </div>
+                                </div>
+                                <div class="partner-card w-[80%] md:w-[calc(33.33%-1rem)] aspect-[4/5] bg-stone-200 rounded-[2.5rem] overflow-hidden shadow-xl snap-start shrink-0 relative">
+                                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800" class="w-full h-full object-cover" alt="Romuald Maufras">
+                                    <div class="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-stone-900/70 to-transparent">
+                                        <p class="text-white text-[10px] md:text-[11px] uppercase font-bold tracking-[0.2em]">Romuald Maufras</p>
+                                    </div>
+                                </div>
+                                <div class="partner-card w-[80%] md:w-[calc(33.33%-1rem)] aspect-[4/5] bg-stone-200 rounded-[2.5rem] overflow-hidden shadow-xl snap-start shrink-0 relative">
+                                    <img src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=800" class="w-full h-full object-cover" alt="Roland Magdane">
+                                    <div class="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-stone-900/70 to-transparent">
+                                        <p class="text-white text-[10px] md:text-[11px] uppercase font-bold tracking-[0.2em]">Roland Magdane</p>
+                                    </div>
+                                </div>
+                                <div class="partner-card w-[80%] md:w-[calc(33.33%-1rem)] aspect-[4/5] bg-stone-200 rounded-[2.5rem] overflow-hidden shadow-xl snap-start shrink-0 relative">
+                                    <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=800" class="w-full h-full object-cover" alt="Inspiration">
+                                    <div class="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-stone-900/70 to-transparent">
+                                        <p class="text-white text-[10px] md:text-[11px] uppercase font-bold tracking-[0.2em]">Inspirations</p>
+                                    </div>
+                                </div>
+                                <div class="partner-card w-[80%] md:w-[calc(33.33%-1rem)] aspect-[4/5] bg-stone-200 rounded-[2.5rem] overflow-hidden shadow-xl snap-start shrink-0 relative">
+                                    <img src="https://images.unsplash.com/photo-1524708215034-722668516d2e?q=80&w=800" class="w-full h-full object-cover" alt="Scène">
+                                    <div class="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-stone-900/70 to-transparent">
+                                        <p class="text-white text-[10px] md:text-[11px] uppercase font-bold tracking-[0.2em]">L'art du Vivant</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>`;
+            },
+
+            viewPress(container) {
+                container.innerHTML = `
+                    <section class="page-transition max-w-6xl mx-auto px-6 py-12">
+                        <div class="text-center mb-16">
+                            <span class="text-[#b45309] font-bold text-[10px] uppercase tracking-[0.5em] mb-3 block italic">Espace Professionnel</span>
+                            <h1 class="text-3xl md:text-5xl font-serif italic mb-4">Press Kits</h1>
+                            <div class="h-px w-10 bg-[#b45309]/30 mx-auto"></div>
                         </div>
 
-                        <button type="submit" class="w-full bg-stone-900 text-white text-[11px] uppercase tracking-[0.3em] font-bold py-5 rounded-full hover:bg-orange-700 transition-all shadow-2xl shadow-stone-200/50 transform active:scale-[0.98]">
-                            Envoyer la demande pro
-                        </button>
-                    </form>
-                    <div id="success-msg" class="hidden mt-8 p-6 bg-emerald-50 border border-emerald-100 text-emerald-800 rounded-2xl text-center font-medium animate-pulse">
-                        Votre demande a été transmise à GF Productions. Nous reviendrons vers vous sous 48h.
+                        <div class="grid grid-cols-1 gap-12">
+                            ${this.shows.map(s => `
+                                <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-stone-100 hover:shadow-md transition-all duration-500">
+                                    <div class="flex flex-col md:flex-row gap-8 items-center">
+                                        <div class="w-32 md:w-40 shrink-0">
+                                            <div class="aspect-[3/4] bg-stone-200 rounded-xl overflow-hidden shadow-lg border border-stone-50">
+                                                <img src="${s.poster || s.images[0]}" class="w-full h-full object-cover transition-all duration-700" alt="Affiche ${s.title}">
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow w-full">
+                                            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                                                <div>
+                                                    <h3 class="text-2xl md:text-3xl font-serif italic mb-1 text-stone-900">${s.title}</h3>
+                                                    <p class="text-[9px] uppercase tracking-widest text-[#b45309] font-bold">${s.genre}</p>
+                                                </div>
+                                            </div>
+                                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                                                <button class="flex items-center justify-center gap-3 px-4 py-3 bg-stone-50 rounded-xl text-[8px] uppercase font-bold tracking-widest hover:bg-stone-900 hover:text-white transition-all group/btn border border-stone-100/50">
+                                                    <svg class="w-4 h-4 opacity-40 group-hover/btn:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                                    <span>Dossier Presse</span>
+                                                </button>
+                                                <button class="flex items-center justify-center gap-3 px-4 py-3 bg-stone-50 rounded-xl text-[8px] uppercase font-bold tracking-widest hover:bg-stone-900 hover:text-white transition-all group/btn border border-stone-100/50">
+                                                    <svg class="w-4 h-4 opacity-40 group-hover/btn:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                                    <span>Photos HD</span>
+                                                </button>
+                                                <button class="flex items-center justify-center gap-3 px-4 py-3 bg-stone-50 rounded-xl text-[8px] uppercase font-bold tracking-widest hover:bg-stone-900 hover:text-white transition-all group/btn border border-stone-100/50">
+                                                    <svg class="w-4 h-4 opacity-40 group-hover/btn:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
+                                                    <span>Fiche Tech.</span>
+                                                </button>
+                                                <button class="flex items-center justify-center gap-3 px-4 py-3 bg-stone-50 rounded-xl text-[8px] uppercase font-bold tracking-widest hover:bg-stone-900 hover:text-white transition-all group/btn border border-stone-100/50">
+                                                    <svg class="w-4 h-4 opacity-40 group-hover/btn:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                                    <span>Affiche HD</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </section>`;
+            },
+
+            viewBooking(container) {
+                container.innerHTML = `
+                    <section class="page-transition max-w-2xl mx-auto px-6 py-20 text-center">
+                        <div class="mb-16">
+                            <span class="text-[#b45309] font-bold text-[10px] uppercase tracking-[0.5em] mb-4 block italic">Collaboration</span>
+                            <h1 class="text-5xl md:text-6xl font-serif italic mb-4">Booking Pro</h1>
+                            <p class="text-stone-500 text-xs italic mb-8 max-w-md mx-auto leading-relaxed">
+                                Pour toute demande de programmation, diffusion ou partenariat, merci de remplir ce formulaire simplifié.
+                            </p>
+                            <div class="h-px w-16 bg-[#b45309]/30 mx-auto"></div>
+                        </div>
+
+                        <form class="space-y-6 text-left" onsubmit="event.preventDefault();">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Nom complet</label>
+                                    <input type="text" placeholder="Gabriel Francès" 
+                                           class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Email professionnel</label>
+                                    <input type="email" placeholder="contact@structure.fr" 
+                                           class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Structure / Théâtre</label>
+                                    <input type="text" placeholder="Nom de votre établissement" 
+                                           class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Période envisagée</label>
+                                    <input type="text" placeholder="Saison 2025-2026..." 
+                                           class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Votre message</label>
+                                <textarea placeholder="Détails de votre demande..." 
+                                          class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl h-40 outline-none transition-all placeholder:opacity-30 resize-none"></textarea>
+                            </div>
+
+                            <button class="w-full bg-[#c2410c] text-white py-5 rounded-2xl uppercase font-bold text-[10px] tracking-widest hover:bg-stone-900 transition-all shadow-xl mt-4">
+                                Envoyer la demande
+                            </button>
+                        </form>
+                    </section>`;
+            },
+
+            viewMentions(container) {
+                container.innerHTML = `<section class="page-transition max-w-4xl mx-auto px-6 py-24 text-center"><h1 class="text-5xl font-serif italic mb-16 text-center">Mentions Légales</h1><div class="text-stone-600 leading-relaxed font-light text-left space-y-8"><p>GF Productions &copy; 2025. Responsable de la publication : Gabriel Francès.</p></div></section>`;
+            },
+
+            openModal(id) {
+                const show = this.shows.find(s => s.id === (id === 'couscous-elysee' ? 'couscous-elysee' : 'laughter-bursts'));
+                if (!show) return;
+                this.state.carouselIndex = 0;
+                this.state.testimonialIndex = 0;
+                const hasTestimonials = show.testimonials && show.testimonials.length > 0;
+                document.getElementById('modal-content').innerHTML = `
+                    <div class="mb-10">
+                        <span class="text-[#b45309] text-[10px] uppercase font-bold tracking-widest">${show.genre}</span>
+                        <h2 class="text-4xl md:text-5xl font-serif italic mt-4 mb-8 leading-tight">${show.title}</h2>
+                        <p class="text-stone-600 italic text-lg leading-relaxed mb-10">${show.content}</p>
+                        ${hasTestimonials ? `
+                            <div class="mt-12 pt-10 border-t border-stone-100 relative min-h-[160px]">
+                                <svg class="w-8 h-8 text-[#b45309]/20 absolute -top-4 left-0" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H16.017C14.9124 8 14.017 7.10457 14.017 6V3H21.017V15C21.017 18.3137 18.3307 21 15.017 21H14.017ZM3.017 21L3.017 18C3.017 16.8954 3.91243 16 5.017 16H8.017C8.56928 16 9.017 15.5523 9.017 15V9C20.017 8.44772 8.56928 8 8.017 8H5.017C3.91243 8 3.017 7.10457 3.017 6V3H10.017V15C10.017 18.3137 7.33072 21 4.017 21H3.017Z"/></svg>
+                                <div id="testimonials-container" class="relative overflow-hidden h-full">
+                                    ${show.testimonials.map((t, i) => `
+                                        <div class="testimonial-slide ${i === 0 ? 'active' : ''}" data-idx="${i}">
+                                            <p class="text-stone-800 text-base leading-relaxed italic mb-4">"${t.text}"</p>
+                                            <p class="text-[#b45309] font-bold text-[10px] uppercase tracking-widest">— ${t.author}</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
                     </div>
-                </section>
-            `;
-        }
+                    <div class="flex flex-col gap-4">
+                        <a href="${show.teaser}" target="_blank" class="flex items-center justify-between w-full bg-[#c2410c] text-white px-8 py-4 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-stone-900 transition group shadow-md">
+                            <span>Voir le Teaser</span>
+                            <svg class="w-4 h-4 fill-current transform group-hover:scale-110 transition" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                        </a>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button onclick="app.navigate('presskits'); app.closeModal();" class="flex items-center justify-center gap-2 border border-stone-200 hover:border-[#b45309] hover:text-[#b45309] px-6 py-4 rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-orange-50/50 transition-all">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                <span>Kit technique</span>
+                            </button>
+                            <button onclick="app.navigate('booking'); app.closeModal();" class="flex items-center justify-center gap-2 border border-stone-200 hover:border-[#b45309] hover:text-[#b45309] px-6 py-4 rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-orange-50/50 transition-all">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                <span>Booking</span>
+                            </button>
+                        </div>
+                    </div>`;
+                this.initCarousel(show.images);
+                if (hasTestimonials) this.startTestimonialTimer(show.testimonials.length);
+                const m = document.getElementById('showModal');
+                m.style.display = 'flex';
+                setTimeout(() => m.classList.add('active'), 10);
+                document.body.style.overflow = 'hidden';
+            },
 
-        // --- Navigation Logic ---
+            startTestimonialTimer(count) {
+                this.stopTestimonialTimer();
+                this.testimonialInterval = setInterval(() => {
+                    this.state.testimonialIndex = (this.state.testimonialIndex + 1) % count;
+                    this.updateTestimonialUI();
+                }, 5000);
+            },
+            stopTestimonialTimer() { if (this.testimonialInterval) clearInterval(this.testimonialInterval); },
+            updateTestimonialUI() {
+                const slides = document.querySelectorAll('.testimonial-slide');
+                slides.forEach((slide, i) => slide.classList.toggle('active', i === this.state.testimonialIndex));
+            },
+            initCarousel(images) {
+                const container = document.getElementById('carousel-container');
+                const dotsContainer = document.getElementById('carousel-dots');
+                container.innerHTML = images.map((img, idx) => `<div class="carousel-item ${idx === 0 ? 'active' : ''}" data-index="${idx}"><img src="${img}" class="w-full h-full object-cover" alt="Spectacle ${idx}"></div>`).join('');
+                dotsContainer.innerHTML = images.map((_, idx) => `<button onclick="app.setCarousel(${idx})" class="dot w-1.5 h-1.5 rounded-full bg-white/40 ${idx === 0 ? 'active' : ''}" data-dot="${idx}"></button>`).join('');
+            },
+            updateCarouselUI() {
+                const items = document.querySelectorAll('.carousel-item');
+                const dots = document.querySelectorAll('.dot');
+                items.forEach((item, idx) => item.classList.toggle('active', idx === this.state.carouselIndex));
+                dots.forEach((dot, idx) => dot.classList.toggle('active', idx === this.state.carouselIndex));
+            },
+            setCarousel(idx) { this.state.carouselIndex = idx; this.updateCarouselUI(); },
+            carouselNext(e) { if(e) e.stopPropagation(); const show = this.shows.find(s => s.id === (this.state.id === 'couscous-elysee' ? 'couscous-elysee' : 'laughter-bursts')); this.state.carouselIndex = (this.state.carouselIndex + 1) % show.images.length; this.updateCarouselUI(); },
+            carouselPrev(e) { if(e) e.stopPropagation(); const show = this.shows.find(s => s.id === (this.state.id === 'couscous-elysee' ? 'couscous-elysee' : 'laughter-bursts')); this.state.carouselIndex = (this.state.carouselIndex - 1 + show.images.length) % show.images.length; this.updateCarouselUI(); },
+            closeModal() { this.stopTestimonialTimer(); this.state.view = 'home'; this.state.id = null; this.hideModalUI(); },
+            hideModalUI() { const m = document.getElementById('showModal'); if(!m) return; m.classList.remove('active'); setTimeout(() => { m.style.display = 'none'; document.body.style.overflow = 'auto'; }, 300); },
+            toggleMenu() { document.getElementById('mobile-menu').classList.toggle('open'); }
+        };
 
-        function handleBookingSubmit(e) {
-            e.preventDefault();
-            const form = e.target;
-            const successMsg = document.getElementById('success-msg');
-            form.style.opacity = '0.5';
-            form.style.pointerEvents = 'none';
-            setTimeout(() => {
-                form.reset();
-                form.style.opacity = '1';
-                form.style.pointerEvents = 'auto';
-                successMsg.classList.remove('hidden');
-                setTimeout(() => successMsg.classList.add('hidden'), 6000);
-            }, 1200);
-        }
-
-        function showPage(page) {
-            if (page === 'home') renderHome();
-            else if (page === 'auteur') renderAuteur();
-            else if (page === 'tournee') renderTournee();
-            else if (page === 'presskits') renderPressKits();
-            else if (page === 'booking') renderBooking();
-            window.scrollTo(0, 0);
-        }
-
-        // Lancement au chargement
-        window.onload = renderHome;
-        window.onclick = function(e) { if (e.target.id == 'showModal') closeModal(); }
+        app.init();
     </script>
 </body>
 </html>
