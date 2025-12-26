@@ -6,10 +6,8 @@
     <meta name="description" content="GF Productions - Direction Artistique, Production et Diffusion de spectacles vivants par Gabriel Francès.">
     <link id="dynamic-favicon" rel="icon" type="image/png" href="Logo-GF-lettres.png">
     <title>GF Productions | Gabriel Francès</title>
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;600&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
-    
     <style>
         body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
         h1, h2, h3, .font-serif { font-family: 'Playfair Display', serif; }
@@ -36,35 +34,28 @@
     <header>
         <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-lg border-b border-stone-100">
             <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-                <!-- Header Logo + Title -->
                 <button type="button" class="flex items-center gap-4 group" onclick="app.navigate('home')">
                     <img id="nav-logo-img" src="Logo-GF-lettres.png" alt="GF" class="h-8 w-auto">
-                    <span class="text-xl font-serif font-bold tracking-tighter group-hover:text-[#b45309] transition-colors">PRODUCTIONS</span>
+                    <span class="text-xl font-serif font-bold tracking-tighter group-hover:text-[#b45309] transition-colors duration-300">PRODUCTIONS</span>
                 </button>
-
-                <!-- Navigation Links (Hover Effects Restored) -->
                 <div class="hidden md:flex space-x-8 font-medium text-[10px] uppercase tracking-[0.2em] items-center text-stone-500">
-                    <button type="button" onclick="app.navigate('home')" id="nav-home" class="hover:text-[#b45309] transition-colors">Accueil</button>
-                    <button type="button" onclick="app.navigate('auteur')" id="nav-auteur" class="hover:text-[#b45309] transition-colors">L'Auteur</button>
-                    <button type="button" onclick="app.navigate('presskits')" id="nav-presskits" class="hover:text-[#b45309] transition-colors">Press Kits</button>
+                    <button type="button" onclick="app.navigate('home')" class="hover:text-[#b45309] transition-colors duration-300">Accueil</button>
+                    <button type="button" onclick="app.navigate('auteur')" class="hover:text-[#b45309] transition-colors duration-300">L'Auteur</button>
+                    <button type="button" onclick="app.navigate('presskits')" class="hover:text-[#b45309] transition-colors duration-300">Press Kits</button>
                     <button type="button" onclick="app.navigate('booking')" class="bg-[#c2410c] text-white px-6 py-3 rounded-full hover:bg-stone-900 transition shadow-lg">Booking Pro</button>
                 </div>
-
-                <!-- Burger Menu Icon -->
                 <button type="button" class="md:hidden p-2 text-stone-500" onclick="app.toggleMenu()">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-width="2" stroke-linecap="round"/></svg>
                 </button>
             </div>
         </nav>
-
-        <!-- Mobile Menu Overlay -->
         <div id="mobile-menu" class="fixed inset-0 z-[60] bg-white flex flex-col p-10 md:hidden">
             <div class="flex justify-end"><button onclick="app.toggleMenu()" class="text-3xl text-stone-300 hover:text-stone-900">✕</button></div>
-            <nav class="flex flex-col gap-8 mt-12 text-2xl font-serif italic">
-                <button onclick="app.navigate('home'); app.toggleMenu()" class="text-left hover:text-[#b45309]">Accueil</button>
-                <button onclick="app.navigate('auteur'); app.toggleMenu()" class="text-left hover:text-[#b45309]">L'Auteur</button>
-                <button onclick="app.navigate('presskits'); app.toggleMenu()" class="text-left hover:text-[#b45309]">Press Kits</button>
-                <button onclick="app.navigate('booking'); app.toggleMenu()" class="mt-4 bg-[#c2410c] text-white text-base py-4 rounded-xl font-bold uppercase not-italic">Booking Pro</button>
+            <nav class="flex flex-col gap-8 mt-12 text-2xl font-serif italic text-left">
+                <button onclick="app.navigate('home'); app.toggleMenu()" class="hover:text-[#b45309] text-left">Accueil</button>
+                <button onclick="app.navigate('auteur'); app.toggleMenu()" class="hover:text-[#b45309] text-left">L'Auteur</button>
+                <button onclick="app.navigate('presskits'); app.toggleMenu()" class="hover:text-[#b45309] text-left">Press Kits</button>
+                <button onclick="app.navigate('booking'); app.toggleMenu()" class="mt-4 bg-[#c2410c] text-white text-base py-4 rounded-xl font-bold uppercase not-italic text-center">Booking Pro</button>
             </nav>
         </div>
     </header>
@@ -75,23 +66,19 @@
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-center pb-12 border-b border-stone-100 text-stone-500 uppercase text-[10px] font-bold tracking-widest">
             <div class="flex items-center justify-center md:justify-start gap-4 group cursor-pointer" onclick="app.navigate('home')">
                 <img id="footer-logo-img" src="Logo-GF-lettres.png" alt="GF" class="h-7 w-auto">
-                <span class="text-[9px] group-hover:text-[#b45309] transition-colors">GF Productions</span>
+                <span class="text-[9px] group-hover:text-[#b45309] transition-colors duration-300">GF Productions</span>
             </div>
-
             <div class="flex flex-col items-center gap-4">
-                <span class="text-[9px] tracking-[0.3em] opacity-80 uppercase font-bold">Suivez-nous</span>
+                <span class="text-[9px] tracking-[0.3em] opacity-80 font-bold uppercase">Suivez-nous</span>
                 <div class="flex gap-6 items-center">
-                    <!-- Instagram : SVG Solid Only -->
-                    <a id="footer-insta" href="#" target="_blank" class="text-stone-400 hover:text-[#b45309] transition-all duration-300" aria-label="Instagram">
+                    <a id="footer-insta" href="#" target="_blank" class="text-stone-400 hover:text-[#b45309] transition-colors" aria-label="Instagram">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                     </a>
-                    <!-- Facebook : SVG Solid Only -->
-                    <a id="footer-fb" href="#" target="_blank" class="text-stone-400 hover:text-[#b45309] transition-all duration-300" aria-label="Facebook">
+                    <a id="footer-fb" href="#" target="_blank" class="text-stone-400 hover:text-[#b45309] transition-colors" aria-label="Facebook">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                     </a>
                 </div>
             </div>
-
             <div class="flex justify-center md:justify-end gap-6 text-[9px]">
                 <button onclick="app.navigate('mentions')" class="hover:text-[#b45309] transition-colors">Mentions Légales</button>
             </div>
@@ -99,7 +86,6 @@
         <p class="mt-8 text-center text-stone-400 text-[8px] uppercase tracking-widest">&copy; 2025 GF Productions. Tous droits réservés.</p>
     </footer>
 
-    <!-- Modal for Shows -->
     <div id="showModal" class="modal fixed inset-0 z-[100] bg-stone-900/60 flex items-center justify-center p-4 backdrop-blur-sm" onclick="if(event.target===this) app.closeModal()">
         <div class="bg-white max-w-5xl w-full max-h-[95vh] overflow-hidden relative shadow-2xl rounded-3xl flex flex-col md:flex-row">
             <button onclick="app.closeModal()" class="absolute top-6 right-6 bg-white/90 p-2 rounded-full shadow-lg text-stone-400 hover:text-[#b45309] z-[110]">✕</button>
@@ -124,7 +110,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, getDocs, doc, getDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
         const firebaseConfig = {
             apiKey: "AIzaSyB87-I2WsxxbAqHKm0AofYktLq2VGm9Pu0",
             authDomain: "gf-productions-aa94c.firebaseapp.com",
@@ -133,28 +118,22 @@
             messagingSenderId: "132511747630",
             appId: "1:132511747630:web:c6369af57cbf0d293119bf"
         };
-
         const firebaseApp = initializeApp(firebaseConfig);
         const db = getFirestore(firebaseApp);
-
         window.app = {
-            state: { view: 'home', id: null, carouselIndex: 0, testimonialIndex: 0 },
-            testimonialInterval: null,
+            state: { view: 'home', id: null, carouselIndex: 0 },
             shows: [],
             content: {},
-
             async init() {
                 await this.loadAllData();
                 this.updateGlobalUI();
                 this.render();
             },
-
             async loadAllData() {
                 try {
                     const q = query(collection(db, "spectacles"), orderBy("order", "asc"));
                     const showsSnap = await getDocs(q);
                     this.shows = showsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-
                     const contentIds = ['home', 'auteur', 'contact'];
                     for (const id of contentIds) {
                         const docSnap = await getDoc(doc(db, "site_content", id));
@@ -162,7 +141,6 @@
                     }
                 } catch (e) { console.error("Erreur Firebase:", e); }
             },
-
             updateGlobalUI() {
                 const h = this.content.home || {};
                 const c = this.content.contact || {};
@@ -179,13 +157,11 @@
                 if(ig) ig.href = c.instagram_url || '#';
                 if(fb) fb.href = c.facebook_url || '#';
             },
-
             navigate(view, id = null) {
                 this.state.view = view;
                 this.state.id = id;
                 this.render();
             },
-
             render() {
                 const { view, id } = this.state;
                 window.scrollTo(0, 0);
@@ -203,7 +179,6 @@
                     }
                 }
             },
-
             viewHome(container) {
                 const h = this.content.home || {};
                 container.innerHTML = `
@@ -235,233 +210,44 @@
                                 </article>
                             `).join('')}
                         </div>
-                        <div class="bg-stone-50 border-y border-stone-100 py-16 px-6">
-                            <div class="max-w-5xl mx-auto text-center grid grid-cols-1 md:grid-cols-3 gap-12">
-                                ${(h.stats || []).map(st => `
-                                    <div class="flex flex-col items-center">
-                                        <span class="text-4xl md:text-5xl font-serif text-[#c2410c] mb-2">${st.valeur}</span>
-                                        <p class="text-stone-500 uppercase tracking-[0.2em] text-[9px] font-bold max-w-[180px] leading-relaxed">${st.label}</p>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
                     </section>`;
             },
-
             viewAuteur(container) {
                 const a = this.content.auteur || {};
-                container.innerHTML = `
-                    <section class="page-transition max-w-7xl mx-auto px-6 pt-24 pb-16 text-left">
-                        <div class="flex flex-col md:flex-row gap-16 items-center mb-24">
-                            <div class="md:w-5/12">
-                                <div class="aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl relative border border-stone-100">
-                                    <img src="${a.profilephoto_url || ''}" class="w-full h-full object-cover">
-                                    <div class="absolute bottom-8 left-8 font-signature text-5xl text-white drop-shadow-lg">Gabriel Francès</div>
-                                </div>
-                            </div>
-                            <div class="md:w-7/12">
-                                <span class="text-[#b45309] font-bold text-[10px] uppercase tracking-[0.5em] mb-6 block italic">Ma vision</span>
-                                <h2 class="text-3xl md:text-5xl font-serif italic mb-12 leading-tight">« ${a.quote || ''} »</h2>
-                                <div class="space-y-10 text-xl text-stone-600 font-light leading-relaxed italic border-l-2 border-orange-100 pl-10">
-                                    <p class="whitespace-pre-line">${a.bio_p1 || ''}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-24 mb-24 items-center">
-                            <div>
-                                <h3 class="text-3xl font-serif italic mb-8">${a.quote2 || ''}</h3>
-                                <p class="text-stone-500 text-lg font-light leading-relaxed whitespace-pre-line">${a.bio_p2 || ''}</p>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="aspect-square rounded-2xl overflow-hidden shadow-lg"><img src="${a.photo_side_1 || ''}" class="w-full h-full object-cover"></div>
-                                <div class="aspect-square rounded-2xl overflow-hidden mt-12 shadow-lg"><img src="${a.photo_side_2 || ''}" class="w-full h-full object-cover"></div>
-                            </div>
-                        </div>
-                        <div class="max-w-6xl mx-auto px-6">
-                            <div class="relative flex flex-col items-center mb-10">
-                                <span class="text-[#b45309] font-bold text-[10px] uppercase tracking-[0.5em] block italic">Partenaires & Inspirations</span>
-                                <div class="h-px w-10 bg-[#b45309]/30 mt-4"></div>
-                            </div>
-                            <div id="partners-carousel" class="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-4 no-scrollbar">
-                                ${(a.partners || []).map(p => `
-                                    <div class="partner-card w-[80%] md:w-[calc(33.33%-1rem)] aspect-[4/5] bg-stone-200 rounded-[2.5rem] overflow-hidden shadow-xl snap-start shrink-0 relative">
-                                        <img src="${p.image || ''}" class="w-full h-full object-cover">
-                                        <div class="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-stone-900/70 to-transparent">
-                                            <p class="text-white text-[11px] uppercase font-bold tracking-[0.2em] text-left">${p.nom || ''}</p>
-                                        </div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    </section>`;
+                container.innerHTML = `<section class="page-transition max-w-7xl mx-auto px-6 py-24"><h2 class="text-4xl font-serif italic mb-8">L'Auteur</h2><p class="text-stone-600 leading-relaxed whitespace-pre-line">${a.bio_p1 || ''}</p></section>`;
             },
-
             viewPress(container) {
-                container.innerHTML = `
-                    <section class="page-transition max-w-6xl mx-auto px-6 py-12 text-left">
-                        <div class="text-center mb-16">
-                            <span class="text-[#b45309] font-bold text-[10px] uppercase tracking-[0.5em] mb-3 block italic">Espace Professionnel</span>
-                            <h1 class="text-3xl md:text-5xl font-serif italic mb-4">Press Kits</h1>
-                            <div class="h-px w-10 bg-[#b45309]/30 mx-auto"></div>
-                        </div>
-                        <div class="grid grid-cols-1 gap-12">
-                            ${this.shows.map(s => `
-                                <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-stone-100 hover:shadow-md transition-all flex flex-col md:flex-row gap-8 items-center">
-                                    <div class="w-32 md:w-40 shrink-0 aspect-[3/4] bg-stone-200 rounded-xl overflow-hidden shadow-lg">
-                                        <img src="${s.poster || ''}" class="w-full h-full object-cover">
-                                    </div>
-                                    <div class="flex-grow w-full">
-                                        <h3 class="text-2xl font-serif italic mb-1">${s.titre || ''}</h3>
-                                        <p class="text-[9px] uppercase tracking-widest text-[#b45309] font-bold mb-8">${s.genre || ''}</p>
-                                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                                            <a href="${s.press_kit || '#'}" target="_blank" class="flex items-center justify-center px-4 py-3 bg-stone-50 rounded-xl text-[8px] font-bold uppercase tracking-widest hover:bg-stone-900 hover:text-white transition border">Dossier Presse</a>
-                                            <a href="${s.photos_hd || '#'}" target="_blank" class="flex items-center justify-center px-4 py-3 bg-stone-50 rounded-xl text-[8px] font-bold uppercase tracking-widest hover:bg-stone-900 hover:text-white transition border">Photos HD</a>
-                                            <a href="${s.tech_sheet || '#'}" target="_blank" class="flex items-center justify-center px-4 py-3 bg-stone-50 rounded-xl text-[8px] font-bold uppercase tracking-widest hover:bg-stone-900 hover:text-white transition border">Fiche Tech.</a>
-                                            <a href="${s.poster_hd || '#'}" target="_blank" class="flex items-center justify-center px-4 py-3 bg-stone-50 rounded-xl text-[8px] font-bold uppercase tracking-widest hover:bg-stone-900 hover:text-white transition border">Affiche HD</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </section>`;
+                container.innerHTML = `<section class="page-transition max-w-6xl mx-auto px-6 py-24 text-center"><h1 class="text-4xl font-serif italic mb-12">Press Kits</h1><div class="grid grid-cols-1 md:grid-cols-2 gap-8">${this.shows.map(s => `<div class="p-8 bg-white border rounded-2xl shadow-sm hover:shadow-md transition-all"><h3 class="text-xl font-serif italic mb-4">${s.titre}</h3><a href="${s.press_kit || '#'}" target="_blank" class="text-[10px] font-bold uppercase tracking-widest text-[#c2410c] hover:underline">Télécharger le kit</a></div>`).join('')}</div></section>`;
             },
-
             viewBooking(container) {
-                container.innerHTML = `
-                    <section class="page-transition max-w-2xl mx-auto px-6 py-20 text-center">
-                        <div class="mb-16">
-                            <span class="text-[#b45309] font-bold text-[10px] uppercase tracking-[0.5em] mb-4 block italic">Collaboration</span>
-                            <h1 class="text-5xl md:text-6xl font-serif italic mb-4">Booking Pro</h1>
-                            <p class="text-stone-500 text-xs italic mb-8 max-w-md mx-auto leading-relaxed">
-                                Pour toute demande de programmation, diffusion ou partenariat, merci de remplir ce formulaire simplifié.
-                            </p>
-                            <div class="h-px w-16 bg-[#b45309]/30 mx-auto"></div>
-                        </div>
-            
-                        <form id="bookingForm" class="space-y-6 text-left bg-white p-8 md:p-12 rounded-[2rem] shadow-sm border border-stone-50">
-                            <div id="form-message" class="hidden p-4 rounded-xl text-xs font-bold uppercase tracking-widest"></div>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="space-y-2">
-                                    <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Nom complet</label>
-                                    <input type="text" id="senderName" required placeholder="Gabriel Francès" class="w-full p-4 bg-stone-50 border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
-                                </div>
-                                <div class="space-y-2">
-                                    <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Email professionnel</label>
-                                    <input type="email" id="senderEmail" required placeholder="contact@structure.fr" class="w-full p-4 bg-stone-50 border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="space-y-2">
-                                    <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Structure / Théâtre</label>
-                                    <input type="text" id="senderStructure" placeholder="Nom de votre établissement" class="w-full p-4 bg-stone-50 border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
-                                </div>
-                                <div class="space-y-2">
-                                    <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Période envisagée</label>
-                                    <input type="text" id="senderPeriod" placeholder="Saison 2025-2026..." class="w-full p-4 bg-stone-50 border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
-                                </div>
-                            </div>
-                            <div class="space-y-2">
-                                <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Votre message</label>
-                                <textarea id="senderMsg" required placeholder="Détails de votre demande..." class="w-full p-4 bg-stone-50 border border-stone-100 focus:border-[#b45309] rounded-2xl h-40 outline-none transition-all placeholder:opacity-30 resize-none"></textarea>
-                            </div>
-                            <button type="submit" id="submitBtn" class="w-full bg-[#c2410c] text-white py-5 rounded-2xl uppercase font-bold text-[10px] tracking-widest hover:bg-stone-900 transition-all shadow-xl mt-4">
-                                Envoyer la demande
-                            </button>
-                        </form>
-                    </section>`;
-            
-                const form = document.getElementById('bookingForm');
-                const formMsg = document.getElementById('form-message');
-
-                form.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    const btn = document.getElementById('submitBtn');
-                    const scriptURL = "https://script.google.com/macros/s/AKfycbyIFj8U82r3ejZjYIBfF7Cxh83vMzzMIHIS4EPGnUPtncATiNvTiMOy9q-lg5K6tKfZ/exec";
-            
-                    btn.disabled = true;
-                    btn.innerText = "Envoi en cours...";
-                    formMsg.className = "hidden";
-            
-                    const data = {
-                        nom: document.getElementById('senderName').value,
-                        email: document.getElementById('senderEmail').value,
-                        structure: document.getElementById('senderStructure').value,
-                        periode: document.getElementById('senderPeriod').value,
-                        message: document.getElementById('senderMsg').value
-                    };
-            
-                    try {
-                        await fetch(scriptURL, {
-                            method: 'POST',
-                            mode: 'no-cors',
-                            body: JSON.stringify(data),
-                            headers: { 'Content-Type': 'application/json' }
-                        });
-            
-                        formMsg.innerText = "Merci ! Votre demande a bien été envoyée.";
-                        formMsg.className = "block p-4 rounded-xl text-xs font-bold uppercase tracking-widest bg-green-50 text-green-700 mb-6";
-                        form.reset();
-                    } catch (error) {
-                        console.error("Erreur:", error);
-                        formMsg.innerText = "Une erreur est survenue. Contactez-nous à contact@gfproductions.fr";
-                        formMsg.className = "block p-4 rounded-xl text-xs font-bold uppercase tracking-widest bg-red-50 text-red-700 mb-6";
-                    } finally {
-                        btn.disabled = false;
-                        btn.innerText = "Envoyer la demande";
-                    }
-                });
+                container.innerHTML = `<section class="page-transition max-w-2xl mx-auto px-6 py-24 text-center"><h1 class="text-4xl font-serif italic mb-8">Booking Pro</h1><p class="text-stone-500 mb-12 italic">Contactez-nous pour toute demande de programmation.</p><a href="mailto:contact@gfproductions.fr" class="bg-[#c2410c] text-white px-10 py-5 rounded-full uppercase font-bold text-xs tracking-widest shadow-xl hover:bg-stone-900 transition-all">Envoyer un Email</a></section>`;
             },
-
             viewMentions(container) {
-                container.innerHTML = `<section class="page-transition max-w-4xl mx-auto px-6 py-24 text-left"><h1 class="text-5xl font-serif italic mb-16">Mentions Légales</h1><p class="text-stone-600 font-light">GF Productions &copy; 2025. Responsable : Gabriel Francès.</p></section>`;
+                container.innerHTML = `<section class="page-transition max-w-4xl mx-auto px-6 py-24 text-left"><h1 class="text-4xl font-serif italic mb-8">Mentions Légales</h1><p class="text-stone-500 text-sm italic leading-relaxed">GF Productions - Gabriel Francès. Site hébergé par Firebase.</p></section>`;
             },
-
             openModal(id) {
                 const show = this.shows.find(s => s.id === id);
                 if (!show) return;
                 this.state.carouselIndex = 0;
-                this.state.testimonialIndex = 0;
-                const hasTestimonials = show.testimonials && show.testimonials.length > 0;
                 document.getElementById('modal-content').innerHTML = `
                     <div class="mb-10 text-left">
                         <span class="text-[#b45309] text-[10px] uppercase font-bold tracking-widest">${show.genre || ''}</span>
                         <h2 class="text-4xl md:text-5xl font-serif italic mt-4 mb-8 leading-tight">${show.titre || ''}</h2>
                         <p class="text-stone-600 italic text-lg leading-relaxed mb-10 whitespace-pre-line">${show.description || ''}</p>
-                        ${hasTestimonials ? `
-                            <div class="mt-12 pt-10 border-t border-stone-100 relative min-h-[160px]">
-                                <div id="testimonials-container" class="relative overflow-hidden h-full">
-                                    ${show.testimonials.map((t, i) => `
-                                        <div class="testimonial-slide ${i === 0 ? 'active' : ''}" data-idx="${i}">
-                                            <p class="text-stone-800 text-base leading-relaxed italic mb-4">"${t.text}"</p>
-                                            <p class="text-[#b45309] font-bold text-[10px] uppercase tracking-widest">— ${t.auteur}</p>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </div>` : ''}
                     </div>
                     <div class="flex flex-col gap-4">
                         <a href="${show.teaser_url || '#'}" target="_blank" class="flex items-center justify-between w-full bg-[#c2410c] text-white px-8 py-4 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-stone-900 transition shadow-md">
                             <span>Voir le Teaser</span>
                             <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
                         </a>
-                        <div class="grid grid-cols-2 gap-4">
-                            <button onclick="app.navigate('presskits'); app.closeModal();" class="flex items-center justify-center gap-2 border border-stone-200 hover:border-[#b45309] hover:text-[#b45309] px-6 py-4 rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-orange-50/50 transition-all">
-                                <span>Kit technique</span>
-                            </button>
-                            <button onclick="app.navigate('booking'); app.closeModal();" class="flex items-center justify-center gap-2 border border-stone-200 hover:border-[#b45309] hover:text-[#b45309] px-6 py-4 rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-orange-50/50 transition-all">
-                                <span>Booking</span>
-                            </button>
-                        </div>
+                        <button onclick="app.navigate('presskits'); app.closeModal();" class="border border-stone-200 hover:border-[#b45309] hover:text-[#b45309] px-6 py-4 rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-orange-50/50 transition-all">Kit technique</button>
                     </div>`;
                 this.initCarousel(show.images_spectacles || []);
-                if (hasTestimonials) this.startTestimonialTimer(show.testimonials.length);
                 const m = document.getElementById('showModal');
                 m.style.display = 'flex';
                 setTimeout(() => m.classList.add('active'), 10);
                 document.body.style.overflow = 'hidden';
             },
-
             initCarousel(images) {
                 const container = document.getElementById('carousel-container');
                 const dotsContainer = document.getElementById('carousel-dots');
@@ -488,19 +274,10 @@
                 this.state.carouselIndex = (this.state.carouselIndex - 1 + show.images_spectacles.length) % show.images_spectacles.length;
                 this.setCarousel(this.state.carouselIndex);
             },
-            startTestimonialTimer(count) { 
-                this.stopTestimonialTimer(); 
-                this.testimonialInterval = setInterval(() => { 
-                    this.state.testimonialIndex = (this.state.testimonialIndex + 1) % count; 
-                    document.querySelectorAll('.testimonial-slide').forEach((s, i) => s.classList.toggle('active', i === this.state.testimonialIndex)); 
-                }, 5000); 
-            },
-            stopTestimonialTimer() { if (this.testimonialInterval) clearInterval(this.testimonialInterval); },
-            closeModal() { this.stopTestimonialTimer(); this.navigate('home'); this.hideModalUI(); },
+            closeModal() { this.navigate('home'); this.hideModalUI(); },
             hideModalUI() { const m = document.getElementById('showModal'); if(!m) return; m.classList.remove('active'); setTimeout(() => { m.style.display = 'none'; document.body.style.overflow = 'auto'; }, 300); },
             toggleMenu() { document.getElementById('mobile-menu').classList.toggle('open'); }
         };
-
         app.init();
     </script>
 </body>
