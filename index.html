@@ -36,6 +36,7 @@
     <header>
         <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-lg border-b border-stone-100">
             <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+                <!-- Header Logo + Title with Hover Effect Restored -->
                 <button type="button" class="flex items-center gap-4 group" onclick="app.navigate('home')">
                     <img id="nav-logo-img" src="Logo-GF-lettres.png" alt="GF" class="h-8 w-auto">
                     <span class="text-xl font-serif font-bold tracking-tighter group-hover:text-[#b45309] transition-colors">PRODUCTIONS</span>
@@ -71,19 +72,19 @@
                 <span class="text-[9px]">GF Productions</span>
             </div>
             
-            <!-- SECTION RÉSEAUX SOCIAUX -->
+            <!-- Footer Icons with Explicit Dimensions -->
             <div class="flex flex-col items-center gap-4">
                 <span class="text-[9px] tracking-[0.3em] opacity-80 uppercase font-bold">Suivez-nous</span>
                 <div class="flex gap-6 items-center">
                     <a id="footer-insta" href="#" target="_blank" class="block group">
-                        <svg class="w-5 h-5 text-stone-400 group-hover:text-[#b45309] transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="20" height="20" class="w-5 h-5 text-stone-600 group-hover:text-[#b45309] transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                             <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                             <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                         </svg>
                     </a>
                     <a id="footer-fb" href="#" target="_blank" class="block group">
-                        <svg class="w-5 h-5 text-stone-400 group-hover:text-[#b45309] transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="20" height="20" class="w-5 h-5 text-stone-600 group-hover:text-[#b45309] transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
                         </svg>
                     </a>
@@ -97,7 +98,6 @@
         <p class="mt-8 text-center text-stone-400 text-[8px] uppercase tracking-widest">&copy; 2025 GF Productions. Tous droits réservés.</p>
     </footer>
 
-    <!-- MODAL SPECTACLE -->
     <div id="showModal" class="modal fixed inset-0 z-[100] bg-stone-900/60 flex items-center justify-center p-4 backdrop-blur-sm" onclick="if(event.target===this) app.closeModal()">
         <div class="bg-white max-w-5xl w-full max-h-[95vh] overflow-hidden relative shadow-2xl rounded-3xl flex flex-col md:flex-row">
             <button onclick="app.closeModal()" class="absolute top-6 right-6 bg-white/90 p-2 rounded-full shadow-lg text-stone-400 hover:text-[#b45309] z-[110]">✕</button>
