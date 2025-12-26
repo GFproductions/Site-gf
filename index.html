@@ -26,6 +26,10 @@
         .carousel-item.active { opacity: 1; z-index: 10; }
         .dot.active { width: 1.5rem; background-color: white; }
         
+        /* Témoignages dans la modale */
+        .testimonial-slide { transition: all 0.6s ease; position: absolute; width: 100%; opacity: 0; transform: translateY(10px); }
+        .testimonial-slide.active { opacity: 1; transform: translateY(0); position: relative; }
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -35,6 +39,7 @@
             mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
             -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
         }
+        #partners-carousel { scroll-snap-type: none !important; }
     </style>
 </head>
 <body class="bg-[#faf9f6] text-stone-900 overflow-x-hidden text-left">
@@ -79,7 +84,6 @@
                 <img id="footer-logo-img" src="Logo-GF-lettres.png" alt="GF" class="h-7 w-auto">
                 <span class="text-[9px] group-hover:text-[#b45309] transition-colors duration-300">GF Productions</span>
             </div>
-
             <div class="flex flex-col items-center gap-4">
                 <span class="text-[9px] tracking-[0.3em] opacity-80 uppercase font-bold">Suivez-nous</span>
                 <div class="flex gap-6 items-center">
@@ -91,7 +95,6 @@
                     </a>
                 </div>
             </div>
-
             <div class="flex justify-center md:justify-end gap-6 text-[9px]">
                 <button onclick="app.navigate('mentions')" class="hover:text-[#b45309] transition-colors">Mentions Légales</button>
             </div>
@@ -99,7 +102,7 @@
         <p class="mt-8 text-center text-stone-400 text-[8px] uppercase tracking-widest">&copy; 2025 GF Productions. Tous droits réservés.</p>
     </footer>
 
-    <!-- MODAL (TEMPLATE) -->
+    <!-- MODAL -->
     <div id="showModal" class="modal fixed inset-0 z-[100] bg-stone-900/60 flex items-center justify-center p-4 backdrop-blur-sm" onclick="if(event.target===this) app.closeModal()">
         <div class="bg-white max-w-5xl w-full max-h-[95vh] overflow-hidden relative shadow-2xl rounded-3xl flex flex-col md:flex-row">
             <button onclick="app.closeModal()" class="absolute top-6 right-6 bg-white/90 p-2 rounded-full shadow-lg text-stone-400 hover:text-[#b45309] z-[110]">✕</button>
@@ -138,10 +141,11 @@
         const db = getFirestore(firebaseApp);
 
         window.app = {
-            state: { view: 'home', id: null, carouselIndex: 0 },
+            state: { view: 'home', id: null, carouselIndex: 0, testimonialIndex: 0 },
             shows: [],
             content: {},
             monitorRaf: null,
+            testimonialInterval: null,
 
             async init() {
                 await this.loadAllData();
@@ -189,6 +193,7 @@
                 window.scrollTo(0, 0);
                 
                 if (this.monitorRaf) cancelAnimationFrame(this.monitorRaf);
+                this.stopTestimonialTimer();
                 
                 const container = document.getElementById('content-area');
                 if (view === 'spectacle' && id) { 
@@ -241,16 +246,6 @@
                                 </article>
                             `).join('')}
                         </div>
-                        <div class="bg-stone-50 border-y border-stone-100 py-16 px-6">
-                            <div class="max-w-5xl mx-auto text-center grid grid-cols-1 md:grid-cols-3 gap-12">
-                                ${(h.stats || []).map(st => `
-                                    <div class="flex flex-col items-center">
-                                        <span class="text-4xl md:text-5xl font-serif text-[#c2410c] mb-2">${st.valeur}</span>
-                                        <p class="text-stone-500 uppercase tracking-[0.2em] text-[9px] font-bold max-w-[180px] leading-relaxed">${st.label}</p>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
                     </section>`;
             },
 
@@ -274,16 +269,6 @@
                                 <div class="space-y-10 text-xl text-stone-600 font-light leading-relaxed italic border-l-2 border-orange-100 pl-10">
                                     <p class="whitespace-pre-line">${a.bio_p1 || ''}</p>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-24 mb-24 items-center">
-                            <div>
-                                <h3 class="text-3xl font-serif italic mb-8">${a.quote2 || ''}</h3>
-                                <p class="text-stone-500 text-lg font-light leading-relaxed whitespace-pre-line">${a.bio_p2 || ''}</p>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="aspect-square rounded-2xl overflow-hidden shadow-lg"><img src="${a.photo_side_1 || ''}" class="w-full h-full object-cover"></div>
-                                <div class="aspect-square rounded-2xl overflow-hidden mt-12 shadow-lg"><img src="${a.photo_side_2 || ''}" class="w-full h-full object-cover"></div>
                             </div>
                         </div>
                         <div class="max-w-6xl mx-auto px-6">
@@ -379,7 +364,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Nom complet</label>
-                                    <input type="text" id="senderName" required placeholder="François Baltrou" class="w-full p-4 bg-stone-50 border border-stone-100 rounded-2xl outline-none focus:border-[#b45309] transition-all">
+                                    <input type="text" id="senderName" required placeholder="Nom complet" class="w-full p-4 bg-stone-50 border border-stone-100 rounded-2xl outline-none focus:border-[#b45309] transition-all">
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Email professionnel</label>
@@ -389,11 +374,11 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Structure / Théâtre</label>
-                                    <input type="text" id="senderStructure" placeholder="Nom de votre établissement" class="w-full p-4 bg-stone-50 border border-stone-100 rounded-2xl outline-none focus:border-[#b45309] transition-all">
+                                    <input type="text" id="senderStructure" placeholder="Nom de l'établissement" class="w-full p-4 bg-stone-50 border border-stone-100 rounded-2xl outline-none focus:border-[#b45309] transition-all">
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Période envisagée</label>
-                                    <input type="text" id="senderPeriod" placeholder="Saison 2025-2026..." class="w-full p-4 bg-stone-50 border border-stone-100 rounded-2xl outline-none focus:border-[#b45309] transition-all">
+                                    <input type="text" id="senderPeriod" placeholder="Saison..." class="w-full p-4 bg-stone-50 border border-stone-100 rounded-2xl outline-none focus:border-[#b45309] transition-all">
                                 </div>
                             </div>
                             <div class="space-y-2">
@@ -403,15 +388,14 @@
                             <button type="submit" id="submitBtn" class="w-full bg-[#c2410c] text-white py-5 rounded-2xl uppercase font-bold text-[10px] tracking-widest hover:bg-stone-900 transition-all shadow-xl mt-4">Envoyer la demande</button>
                         </form>
                     </section>`;
-            
+                
                 const form = document.getElementById('bookingForm');
                 const formMsg = document.getElementById('form-message');
                 form.addEventListener('submit', async (e) => {
                     e.preventDefault();
                     const btn = document.getElementById('submitBtn');
                     const scriptURL = "https://script.google.com/macros/s/AKfycbyIFj8U82r3ejZjYIBfF7Cxh83vMzzMIHIS4EPGnUPtncATiNvTiMOy9q-lg5K6tKfZ/exec";
-                    btn.disabled = true;
-                    btn.innerText = "Envoi en cours...";
+                    btn.disabled = true; btn.innerText = "Envoi en cours...";
                     formMsg.className = "hidden";
                     const data = {
                         nom: document.getElementById('senderName').value,
@@ -429,8 +413,7 @@
                         formMsg.innerText = "Une erreur est survenue.";
                         formMsg.className = "block p-4 rounded-xl text-xs font-bold uppercase tracking-widest bg-red-50 text-red-700 mb-6";
                     } finally {
-                        btn.disabled = false;
-                        btn.innerText = "Envoyer la demande";
+                        btn.disabled = false; btn.innerText = "Envoyer la demande";
                     }
                 });
             },
@@ -451,10 +434,6 @@
                                 <p>Le site est hébergé par <strong>Google Firebase</strong>.<br>
                                 Google Cloud France MSL, 8 Rue de Londres, 75009 Paris.</p>
                             </div>
-                            <div>
-                                <h3 class="text-stone-900 font-bold uppercase tracking-widest text-[11px] mb-4">3. Propriété Intellectuelle</h3>
-                                <p>L'ensemble des contenus présents sur ce site est la propriété exclusive de GF Productions.</p>
-                            </div>
                         </div>
                     </section>`;
             },
@@ -463,11 +442,26 @@
                 const show = this.shows.find(s => s.id === id);
                 if (!show) return;
                 this.state.carouselIndex = 0;
+                this.state.testimonialIndex = 0;
+                const testimonials = show.testimonials || [];
+
                 document.getElementById('modal-content').innerHTML = `
                     <div class="mb-10 text-left">
                         <span class="text-[#b45309] text-[10px] uppercase font-bold tracking-widest">${show.genre || ''}</span>
                         <h2 class="text-4xl md:text-5xl font-serif italic mt-4 mb-8 leading-tight">${show.titre || ''}</h2>
                         <p class="text-stone-600 italic text-lg leading-relaxed mb-10 whitespace-pre-line">${show.description || ''}</p>
+                        
+                        ${testimonials.length > 0 ? `
+                            <div class="mt-12 pt-10 border-t border-stone-100 relative min-h-[160px]">
+                                <div id="testimonials-container" class="relative overflow-hidden h-full">
+                                    ${testimonials.map((t, i) => `
+                                        <div class="testimonial-slide ${i === 0 ? 'active' : ''}" data-idx="${i}">
+                                            <p class="text-stone-800 text-base leading-relaxed italic mb-4">"${t.text}"</p>
+                                            <p class="text-[#b45309] font-bold text-[10px] uppercase tracking-widest">— ${t.auteur}</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>` : ''}
                     </div>
                     <div class="flex flex-col gap-4">
                         <a href="${show.teaser_url || '#'}" target="_blank" class="flex items-center justify-between w-full bg-[#c2410c] text-white px-8 py-4 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-stone-900 transition shadow-md">
@@ -475,11 +469,14 @@
                             <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
                         </a>
                         <div class="grid grid-cols-2 gap-4">
-                            <button onclick="app.navigate('presskits'); app.closeModal();" class="flex items-center justify-center gap-2 border border-stone-200 hover:border-[#b45309] hover:text-[#b45309] px-6 py-4 rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-orange-50/50 transition-all">Kit technique</button>
-                            <button onclick="app.navigate('booking'); app.closeModal();" class="flex items-center justify-center gap-2 border border-stone-200 hover:border-[#b45309] hover:text-[#b45309] px-6 py-4 rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-orange-50/50 transition-all">Booking</button>
+                            <button onclick="app.navigate('presskits'); app.closeModal();" class="border border-stone-200 hover:border-[#b45309] hover:text-[#b45309] px-6 py-4 rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-orange-50/50 transition-all">Kit technique</button>
+                            <button onclick="app.navigate('booking'); app.closeModal();" class="border border-stone-200 hover:border-[#b45309] hover:text-[#b45309] px-6 py-4 rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-orange-50/50 transition-all">Booking</button>
                         </div>
                     </div>`;
+                
                 this.initCarousel(show.images_spectacles || []);
+                if (testimonials.length > 1) this.startTestimonialTimer(testimonials.length);
+
                 const m = document.getElementById('showModal');
                 m.style.display = 'flex';
                 setTimeout(() => m.classList.add('active'), 10);
@@ -512,7 +509,15 @@
                 this.state.carouselIndex = (this.state.carouselIndex - 1 + show.images_spectacles.length) % show.images_spectacles.length;
                 this.setCarousel(this.state.carouselIndex);
             },
-            closeModal() { this.navigate('home'); this.hideModalUI(); },
+            startTestimonialTimer(count) {
+                this.stopTestimonialTimer();
+                this.testimonialInterval = setInterval(() => {
+                    this.state.testimonialIndex = (this.state.testimonialIndex + 1) % count;
+                    document.querySelectorAll('.testimonial-slide').forEach((s, i) => s.classList.toggle('active', i === this.state.testimonialIndex));
+                }, 5000);
+            },
+            stopTestimonialTimer() { if (this.testimonialInterval) clearInterval(this.testimonialInterval); },
+            closeModal() { this.stopTestimonialTimer(); this.navigate('home'); this.hideModalUI(); },
             hideModalUI() { const m = document.getElementById('showModal'); if(!m) return; m.classList.remove('active'); setTimeout(() => { m.style.display = 'none'; document.body.style.overflow = 'auto'; }, 300); },
             toggleMenu() { document.getElementById('mobile-menu').classList.toggle('open'); }
         };
