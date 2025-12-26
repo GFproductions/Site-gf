@@ -173,8 +173,10 @@
                 if (h.logo_nav) {
                     const navLogo = document.getElementById('nav-logo-img');
                     const footerLogo = document.getElementById('footer-logo-img');
+                    const favicon = document.getElementById('dynamic-favicon');
                     if (navLogo) navLogo.src = h.logo_nav;
                     if (footerLogo) footerLogo.src = h.logo_nav;
+                    if (favicon) favicon.href = h.logo_nav;
                 }
                 const ig = document.getElementById('footer-insta');
                 const fb = document.getElementById('footer-fb');
@@ -191,7 +193,6 @@
             render() {
                 const { view, id } = this.state;
                 window.scrollTo(0, 0);
-                
                 if (this.monitorRaf) cancelAnimationFrame(this.monitorRaf);
                 this.stopTestimonialTimer();
                 
@@ -219,12 +220,16 @@
                 const h = this.content.home || {};
                 container.innerHTML = `
                     <section class="page-transition">
-                        <div class="relative h-[42vh] flex flex-col items-center justify-center bg-stone-100">
+                        <div class="relative h-[42vh] flex flex-col items-center bg-stone-100 overflow-hidden">
                             <img src="${h.hero_image || ''}" class="absolute inset-0 w-full h-full object-cover opacity-15">
-                            <div class="relative z-10 text-center px-6 flex flex-col items-center">
-                                <img src="${h.logo || ''}" class="h-32 md:h-48 w-auto mb-6 opacity-95">
-                                <span class="text-[11px] uppercase tracking-[0.4em] text-[#b45309] font-bold mb-3">${h.hero_subtitle || ''}</span>
-                                <h1 class="text-3xl md:text-4xl font-serif italic text-stone-900">${h.hero_title || ''}</h1>
+                            <div class="relative z-10 w-full h-full flex flex-col items-center justify-between py-12 px-6 text-center">
+                                <div class="flex-1 flex items-center justify-center">
+                                    <img src="${h.logo || ''}" class="h-32 md:h-64 w-auto opacity-95">
+                                </div>
+                                <div class="mt-auto">
+                                    <span class="text-[11px] uppercase tracking-[0.4em] text-[#b45309] font-bold mb-3 block">${h.hero_subtitle || ''}</span>
+                                    <h1 class="text-3xl md:text-4xl font-serif italic text-stone-900">${h.hero_title || ''}</h1>
+                                </div>
                             </div>
                             <button onclick="document.getElementById('catalogue-section').scrollIntoView({ behavior: 'smooth', block: 'center' })" class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-20 bg-[#c2410c] text-white px-8 py-5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] shadow-2xl hover:bg-stone-900 transition-all duration-300">Découvrez le catalogue</button>
                         </div>
@@ -263,10 +268,8 @@
                 const a = this.content.auteur || {};
                 const partners = a.partners || [];
                 const triplePartners = [...partners, ...partners, ...partners];
-
                 container.innerHTML = `
                     <section class="page-transition max-w-7xl mx-auto px-6 pt-24 pb-16 text-left">
-                        <!-- Section Profil & Bio P1 -->
                         <div class="flex flex-col md:flex-row gap-16 items-center mb-24">
                             <div class="md:w-5/12">
                                 <div class="aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl relative border border-stone-100">
@@ -282,24 +285,16 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- SECTION RÉINTÉGRÉE : Bio P2 & Grille de Photos -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-24 mb-24 items-center">
                             <div>
                                 <h3 class="text-3xl font-serif italic mb-8">${a.quote2 || ''}</h3>
                                 <p class="text-stone-500 text-lg font-light leading-relaxed whitespace-pre-line">${a.bio_p2 || ''}</p>
                             </div>
                             <div class="grid grid-cols-2 gap-4">
-                                <div class="aspect-square rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition-transform duration-700">
-                                    <img src="${a.photo_side_1 || ''}" class="w-full h-full object-cover">
-                                </div>
-                                <div class="aspect-square rounded-2xl overflow-hidden mt-12 shadow-lg hover:scale-105 transition-transform duration-700">
-                                    <img src="${a.photo_side_2 || ''}" class="w-full h-full object-cover">
-                                </div>
+                                <div class="aspect-square rounded-2xl overflow-hidden shadow-lg"><img src="${a.photo_side_1 || ''}" class="w-full h-full object-cover"></div>
+                                <div class="aspect-square rounded-2xl overflow-hidden mt-12 shadow-lg"><img src="${a.photo_side_2 || ''}" class="w-full h-full object-cover"></div>
                             </div>
                         </div>
-
-                        <!-- Carrousel Partenaires -->
                         <div class="max-w-6xl mx-auto px-6">
                             <div class="relative flex flex-col items-center mb-10">
                                 <span class="text-[#b45309] font-bold text-[10px] uppercase tracking-[0.5em] block italic">Partenaires & Inspirations</span>
@@ -334,14 +329,10 @@
                 const cardWidth = firstCard.offsetWidth + 24; 
                 const singleSetWidth = cardWidth * partnersCount;
                 carousel.scrollLeft = singleSetWidth;
-
                 const monitor = () => {
                     const current = carousel.scrollLeft;
-                    if (current >= singleSetWidth * 2 - 50) {
-                        carousel.scrollLeft -= singleSetWidth;
-                    } else if (current <= 50) {
-                        carousel.scrollLeft += singleSetWidth;
-                    }
+                    if (current >= singleSetWidth * 2 - 50) carousel.scrollLeft -= singleSetWidth;
+                    else if (current <= 50) carousel.scrollLeft += singleSetWidth;
                     this.monitorRaf = requestAnimationFrame(monitor);
                 };
                 this.monitorRaf = requestAnimationFrame(monitor);
@@ -383,9 +374,7 @@
                         <div class="mb-16">
                             <span class="text-[#b45309] font-bold text-[10px] uppercase tracking-[0.5em] mb-4 block italic">Collaboration</span>
                             <h1 class="text-5xl md:text-6xl font-serif italic mb-4">Booking Pro</h1>
-                            <p class="text-stone-500 text-xs italic mb-8 max-w-md mx-auto leading-relaxed">
-                                Pour toute demande de programmation, diffusion ou partenariat, merci de remplir ce formulaire simplifié.
-                            </p>
+                            <p class="text-stone-500 text-xs italic mb-8 max-w-md mx-auto leading-relaxed">Pour toute demande de programmation, diffusion ou partenariat, merci de remplir ce formulaire simplifié.</p>
                             <div class="h-px w-16 bg-[#b45309]/30 mx-auto"></div>
                         </div>
                         <form id="bookingForm" class="space-y-6 text-left bg-white p-8 md:p-12 rounded-[2rem] shadow-sm border border-stone-50">
@@ -427,13 +416,7 @@
                         const scriptURL = "https://script.google.com/macros/s/AKfycbyIFj8U82r3ejZjYIBfF7Cxh83vMzzMIHIS4EPGnUPtncATiNvTiMOy9q-lg5K6tKfZ/exec";
                         btn.disabled = true; btn.innerText = "Envoi en cours...";
                         formMsg.className = "hidden";
-                        const data = {
-                            nom: document.getElementById('senderName').value,
-                            email: document.getElementById('senderEmail').value,
-                            structure: document.getElementById('senderStructure').value,
-                            periode: document.getElementById('senderPeriod').value,
-                            message: document.getElementById('senderMsg').value
-                        };
+                        const data = { nom: document.getElementById('senderName').value, email: document.getElementById('senderEmail').value, structure: document.getElementById('senderStructure').value, periode: document.getElementById('senderPeriod').value, message: document.getElementById('senderMsg').value };
                         try {
                             await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } });
                             formMsg.innerText = "Merci ! Votre demande a bien été envoyée.";
@@ -442,9 +425,7 @@
                         } catch (error) {
                             formMsg.innerText = "Une erreur est survenue.";
                             formMsg.className = "block p-4 rounded-xl text-xs font-bold uppercase tracking-widest bg-red-50 text-red-700 mb-6";
-                        } finally {
-                            btn.disabled = false; btn.innerText = "Envoyer la demande";
-                        }
+                        } finally { btn.disabled = false; btn.innerText = "Envoyer la demande"; }
                     });
                 }
             },
@@ -456,14 +437,11 @@
                         <div class="space-y-12 text-stone-600 font-light leading-relaxed">
                             <div>
                                 <h3 class="text-stone-900 font-bold uppercase tracking-widest text-[11px] mb-4">1. Éditeur du site</h3>
-                                <p>Le présent site est édité par <strong>GF Productions</strong>.<br>
-                                Responsable de la publication : <strong>Gabriel Francès</strong>.<br>
-                                Contact : <a href="mailto:contact@gfproductions.fr" class="text-[#c2410c] hover:underline">contact@gfproductions.fr</a></p>
+                                <p>Le présent site est édité par <strong>GF Productions</strong>.<br>Responsable de la publication : <strong>Gabriel Francès</strong>.<br>Contact : <a href="mailto:contact@gfproductions.fr" class="text-[#c2410c] hover:underline">contact@gfproductions.fr</a></p>
                             </div>
                             <div>
                                 <h3 class="text-stone-900 font-bold uppercase tracking-widest text-[11px] mb-4">2. Hébergement</h3>
-                                <p>Le site est hébergé par <strong>Google Firebase</strong>.<br>
-                                Google Cloud France MSL, 8 Rue de Londres, 75009 Paris.</p>
+                                <p>Le site est hébergé par <strong>Google Firebase</strong>.<br>Google Cloud France MSL, 8 Rue de Londres, 75009 Paris.</p>
                             </div>
                         </div>
                     </section>`;
@@ -475,39 +453,27 @@
                 this.state.carouselIndex = 0;
                 this.state.testimonialIndex = 0;
                 const testimonials = show.testimonials || [];
-
                 document.getElementById('modal-content').innerHTML = `
                     <div class="mb-10 text-left">
                         <span class="text-[#b45309] text-[10px] uppercase font-bold tracking-widest">${show.genre || ''}</span>
                         <h2 class="text-4xl md:text-5xl font-serif italic mt-4 mb-8 leading-tight">${show.titre || ''}</h2>
                         <p class="text-stone-600 italic text-lg leading-relaxed mb-10 whitespace-pre-line">${show.description || ''}</p>
-                        
                         ${testimonials.length > 0 ? `
                             <div class="mt-12 pt-10 border-t border-stone-100 relative min-h-[160px]">
                                 <div id="testimonials-container" class="relative overflow-hidden h-full">
-                                    ${testimonials.map((t, i) => `
-                                        <div class="testimonial-slide ${i === 0 ? 'active' : ''}" data-idx="${i}">
-                                            <p class="text-stone-800 text-base leading-relaxed italic mb-4">"${t.text}"</p>
-                                            <p class="text-[#b45309] font-bold text-[10px] uppercase tracking-widest">— ${t.auteur}</p>
-                                        </div>
-                                    `).join('')}
+                                    ${testimonials.map((t, i) => `<div class="testimonial-slide ${i === 0 ? 'active' : ''}" data-idx="${i}"><p class="text-stone-800 text-base leading-relaxed italic mb-4">"${t.text}"</p><p class="text-[#b45309] font-bold text-[10px] uppercase tracking-widest">— ${t.auteur}</p></div>`).join('')}
                                 </div>
                             </div>` : ''}
                     </div>
                     <div class="flex flex-col gap-4">
-                        <a href="${show.teaser_url || '#'}" target="_blank" class="flex items-center justify-between w-full bg-[#c2410c] text-white px-8 py-4 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-stone-900 transition shadow-md">
-                            <span>Voir le Teaser</span>
-                            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
-                        </a>
+                        <a href="${show.teaser_url || '#'}" target="_blank" class="flex items-center justify-between w-full bg-[#c2410c] text-white px-8 py-4 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-stone-900 transition shadow-md"><span>Voir le Teaser</span><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg></a>
                         <div class="grid grid-cols-2 gap-4">
                             <button onclick="app.closeModal('presskits')" class="border border-stone-200 hover:border-[#b45309] hover:text-[#b45309] px-6 py-4 rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-orange-50/50 transition-all">Kit technique</button>
                             <button onclick="app.closeModal('booking')" class="border border-stone-200 hover:border-[#b45309] hover:text-[#b45309] px-6 py-4 rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-orange-50/50 transition-all">Booking</button>
                         </div>
                     </div>`;
-                
                 this.initCarousel(show.images_spectacles || []);
                 if (testimonials.length > 1) this.startTestimonialTimer(testimonials.length);
-
                 const m = document.getElementById('showModal');
                 m.style.display = 'flex';
                 setTimeout(() => m.classList.add('active'), 10);
@@ -548,24 +514,12 @@
                 }, 5000);
             },
             stopTestimonialTimer() { if (this.testimonialInterval) clearInterval(this.testimonialInterval); },
-            
             closeModal(dest = 'home') { 
                 this.stopTestimonialTimer(); 
                 this.hideModalUI(); 
-                if (dest !== 'home') {
-                    this.navigate(dest); 
-                }
+                if (dest !== 'home') this.navigate(dest); 
             },
-            
-            hideModalUI() { 
-                const m = document.getElementById('showModal'); 
-                if(!m) return; 
-                m.classList.remove('active'); 
-                setTimeout(() => { 
-                    m.style.display = 'none'; 
-                    document.body.style.overflow = 'auto'; 
-                }, 300); 
-            },
+            hideModalUI() { const m = document.getElementById('showModal'); if(!m) return; m.classList.remove('active'); setTimeout(() => { m.style.display = 'none'; document.body.style.overflow = 'auto'; }, 300); },
             toggleMenu() { document.getElementById('mobile-menu').classList.toggle('open'); }
         };
 
