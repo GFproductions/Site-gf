@@ -27,20 +27,16 @@
         .dot.active { width: 1.5rem; background-color: white; }
         .testimonial-slide { transition: all 0.6s ease; position: absolute; width: 100%; opacity: 0; transform: translateY(10px); }
         .testimonial-slide.active { opacity: 1; transform: translateY(0); position: relative; }
+        
+        /* Masquage des barres de scroll */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Animation spécifique pour le défilement infini */
-        @keyframes infinite-scroll {
-            from { transform: translateX(0); }
-            to { transform: translateX(-50%); }
-        }
-        .animate-scroll {
-            animation: infinite-scroll 40s linear infinite;
-        }
-        /* Pause au survol pour plus de confort */
-        .animate-scroll:hover {
-            animation-play-state: paused;
+        /* Effet de fondu subtil sur les bords du carrousel */
+        .carousel-mask {
+            position: relative;
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
         }
     </style>
 </head>
@@ -139,9 +135,11 @@
         const db = getFirestore(firebaseApp);
 
         window.app = {
-            state: { view: 'home', id: null, carouselIndex: 0 },
+            state: { view: 'home', id: null, carouselIndex: 0, testimonialIndex: 0 },
             shows: [],
             content: {},
+            autoScrollRaf: null,
+            isUserInteracting: false,
 
             async init() {
                 await this.loadAllData();
@@ -189,13 +187,18 @@
             render() {
                 const { view, id } = this.state;
                 window.scrollTo(0, 0);
+                this.stopAutoScroll(); 
+                
                 const container = document.getElementById('content-area');
                 if (view === 'spectacle' && id) { this.openModal(id); } 
                 else {
                     this.hideModalUI();
                     switch(view) {
                         case 'home': this.viewHome(container); break;
-                        case 'auteur': this.viewAuteur(container); break;
+                        case 'auteur': 
+                            this.viewAuteur(container); 
+                            this.initAuteurCarousel();
+                            break;
                         case 'presskits': this.viewPress(container); break;
                         case 'booking': this.viewBooking(container); break;
                         case 'mentions': this.viewMentions(container); break;
@@ -250,9 +253,9 @@
 
             viewAuteur(container) {
                 const a = this.content.auteur || {};
-                // On double la liste des partenaires pour créer l'effet infini
-                const partnerList = a.partners || [];
-                const doublePartners = [...partnerList, ...partnerList];
+                const partners = a.partners || [];
+                // Triple la liste pour un scroll infini parfait sans "mur"
+                const triplePartners = [...partners, ...partners, ...partners];
 
                 container.innerHTML = `
                     <section class="page-transition max-w-7xl mx-auto px-6 pt-24 pb-16 text-left">
@@ -289,17 +292,11 @@
                                 <div class="h-px w-10 bg-[#b45309]/30 mt-4"></div>
                             </div>
 
-                            <!-- CONTENEUR DU CARROUSEL INFINI -->
-                            <div class="relative w-full overflow-hidden">
-                                <!-- Fade gauche -->
-                                <div class="absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-[#faf9f6] to-transparent z-10 pointer-events-none"></div>
-                                <!-- Fade droite -->
-                                <div class="absolute inset-y-0 right-0 w-16 md:w-32 bg-gradient-to-l from-[#faf9f6] to-transparent z-10 pointer-events-none"></div>
-
-                                <div class="flex animate-scroll whitespace-nowrap">
-                                    ${doublePartners.map(p => `
-                                        <div class="partner-card w-[280px] md:w-[350px] aspect-[4/5] bg-stone-200 rounded-[2.5rem] overflow-hidden shadow-xl shrink-0 relative mr-6">
-                                            <img src="${p.image || ''}" class="w-full h-full object-cover">
+                            <div class="carousel-mask">
+                                <div id="partners-carousel" class="flex gap-6 overflow-x-auto no-scrollbar py-4 cursor-grab active:cursor-grabbing select-none">
+                                    ${triplePartners.map(p => `
+                                        <div class="partner-card w-[240px] md:w-[320px] aspect-[4/5] bg-stone-200 rounded-[2.5rem] overflow-hidden shadow-xl shrink-0 relative">
+                                            <img src="${p.image || ''}" class="w-full h-full object-cover pointer-events-none">
                                             <div class="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-stone-900/70 to-transparent">
                                                 <p class="text-white text-[11px] uppercase font-bold tracking-[0.2em] text-left">${p.nom || ''}</p>
                                             </div>
@@ -309,6 +306,53 @@
                             </div>
                         </div>
                     </section>`;
+            },
+
+            initAuteurCarousel() {
+                const carousel = document.getElementById('partners-carousel');
+                if (!carousel) return;
+
+                const cardWidth = carousel.querySelector('.partner-card').offsetWidth + 24; // Largeur + gap
+                const originalLength = this.content.auteur.partners?.length || 0;
+                const totalScrollWidth = cardWidth * originalLength;
+
+                // On commence au milieu (le deuxième set de partenaires) pour pouvoir scroller à gauche ou à droite
+                carousel.scrollLeft = totalScrollWidth;
+
+                const step = 0.8; // Vitesse de l'auto-scroll (px par frame)
+
+                const scroll = () => {
+                    if (!this.isUserInteracting) {
+                        carousel.scrollLeft += step;
+
+                        // Gestion de la boucle infinie
+                        if (carousel.scrollLeft >= totalScrollWidth * 2) {
+                            carousel.scrollLeft = totalScrollWidth;
+                        } else if (carousel.scrollLeft <= totalScrollWidth / 2) {
+                            carousel.scrollLeft = totalScrollWidth;
+                        }
+                    }
+                    this.autoScrollRaf = requestAnimationFrame(scroll);
+                };
+
+                // Événements d'interaction
+                const startInteract = () => { this.isUserInteracting = true; };
+                const endInteract = () => { this.isUserInteracting = false; };
+
+                carousel.addEventListener('mouseenter', startInteract);
+                carousel.addEventListener('mouseleave', endInteract);
+                carousel.addEventListener('touchstart', startInteract, { passive: true });
+                carousel.addEventListener('touchend', endInteract);
+
+                // Lancement
+                this.autoScrollRaf = requestAnimationFrame(scroll);
+            },
+
+            stopAutoScroll() {
+                if (this.autoScrollRaf) {
+                    cancelAnimationFrame(this.autoScrollRaf);
+                    this.autoScrollRaf = null;
+                }
             },
 
             viewPress(container) {
@@ -352,35 +396,32 @@
                             </p>
                             <div class="h-px w-16 bg-[#b45309]/30 mx-auto"></div>
                         </div>
-            
                         <form id="bookingForm" class="space-y-6 text-left">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Nom complet</label>
-                                    <input type="text" id="senderName" required placeholder="Gabriel Francès" class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
+                                    <input type="text" id="senderName" required placeholder="Gabriel Francès" class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all">
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Email professionnel</label>
-                                    <input type="email" id="senderEmail" required placeholder="contact@structure.fr" class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
+                                    <input type="email" id="senderEmail" required placeholder="contact@structure.fr" class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all">
                                 </div>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Structure / Théâtre</label>
-                                    <input type="text" id="senderStructure" placeholder="Nom de votre établissement" class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
+                                    <input type="text" id="senderStructure" placeholder="Nom de votre établissement" class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all">
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Période envisagée</label>
-                                    <input type="text" id="senderPeriod" placeholder="Saison 2025-2026..." class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
+                                    <input type="text" id="senderPeriod" placeholder="Saison 2025-2026..." class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all">
                                 </div>
                             </div>
                             <div class="space-y-2">
                                 <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Votre message</label>
-                                <textarea id="senderMsg" required placeholder="Détails de votre demande..." class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl h-40 outline-none transition-all placeholder:opacity-30 resize-none"></textarea>
+                                <textarea id="senderMsg" required placeholder="Détails de votre demande..." class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl h-40 outline-none transition-all resize-none"></textarea>
                             </div>
-                            <button type="submit" id="submitBtn" class="w-full bg-[#c2410c] text-white py-5 rounded-2xl uppercase font-bold text-[10px] tracking-widest hover:bg-stone-900 transition-all shadow-xl mt-4">
-                                Envoyer la demande
-                            </button>
+                            <button type="submit" id="submitBtn" class="w-full bg-[#c2410c] text-white py-5 rounded-2xl uppercase font-bold text-[10px] tracking-widest hover:bg-stone-900 transition-all shadow-xl mt-4">Envoyer la demande</button>
                         </form>
                     </section>`;
             
@@ -403,8 +444,7 @@
                         alert("Merci ! Votre demande a bien été envoyée à GF Productions.");
                         form.reset();
                     } catch (error) {
-                        console.error("Erreur:", error);
-                        alert("Une erreur est survenue. Vous pouvez nous contacter à contact@gfproductions.fr");
+                        alert("Une erreur est survenue.");
                     } finally {
                         btn.disabled = false;
                         btn.innerText = "Envoyer la demande";
@@ -450,17 +490,6 @@
                         <span class="text-[#b45309] text-[10px] uppercase font-bold tracking-widest">${show.genre || ''}</span>
                         <h2 class="text-4xl md:text-5xl font-serif italic mt-4 mb-8 leading-tight">${show.titre || ''}</h2>
                         <p class="text-stone-600 italic text-lg leading-relaxed mb-10 whitespace-pre-line">${show.description || ''}</p>
-                        ${hasTestimonials ? `
-                            <div class="mt-12 pt-10 border-t border-stone-100 relative min-h-[160px]">
-                                <div id="testimonials-container" class="relative overflow-hidden h-full">
-                                    ${show.testimonials.map((t, i) => `
-                                        <div class="testimonial-slide ${i === 0 ? 'active' : ''}">
-                                            <p class="text-stone-800 text-base leading-relaxed italic mb-4">"${t.text}"</p>
-                                            <p class="text-[#b45309] font-bold text-[10px] uppercase tracking-widest">— ${t.auteur}</p>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </div>` : ''}
                     </div>
                     <div class="flex flex-col gap-4">
                         <a href="${show.teaser_url || '#'}" target="_blank" class="flex items-center justify-between w-full bg-[#c2410c] text-white px-8 py-4 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-stone-900 transition shadow-md">
