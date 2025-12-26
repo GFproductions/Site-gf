@@ -28,15 +28,15 @@
         .testimonial-slide { transition: all 0.6s ease; position: absolute; width: 100%; opacity: 0; transform: translateY(10px); }
         .testimonial-slide.active { opacity: 1; transform: translateY(0); position: relative; }
         
-        /* Masquage des barres de scroll */
+        /* Masquage des barres de défilement */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         /* Effet de fondu subtil sur les bords du carrousel */
         .carousel-mask {
             position: relative;
-            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
         }
     </style>
 </head>
@@ -49,17 +49,20 @@
                     <img id="nav-logo-img" src="Logo-GF-lettres.png" alt="GF" class="h-8 w-auto">
                     <span class="text-xl font-serif font-bold tracking-tighter group-hover:text-[#b45309] transition-colors duration-300">PRODUCTIONS</span>
                 </button>
+
                 <div class="hidden md:flex space-x-8 font-medium text-[10px] uppercase tracking-[0.2em] items-center text-stone-500">
                     <button type="button" onclick="app.navigate('home')" class="hover:text-[#b45309] transition-all duration-300">Accueil</button>
                     <button type="button" onclick="app.navigate('auteur')" class="hover:text-[#b45309] transition-all duration-300">L'Auteur</button>
                     <button type="button" onclick="app.navigate('presskits')" class="hover:text-[#b45309] transition-all duration-300">Press Kits</button>
                     <button type="button" onclick="app.navigate('booking')" class="bg-[#c2410c] text-white px-6 py-3 rounded-full hover:bg-stone-900 transition shadow-lg">Booking Pro</button>
                 </div>
+
                 <button type="button" class="md:hidden p-2 text-stone-500" onclick="app.toggleMenu()">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-width="2" stroke-linecap="round"/></svg>
                 </button>
             </div>
         </nav>
+
         <div id="mobile-menu" class="fixed inset-0 z-[60] bg-white flex flex-col p-10 md:hidden">
             <div class="flex justify-end"><button onclick="app.toggleMenu()" class="text-3xl text-stone-300 hover:text-stone-900">✕</button></div>
             <nav class="flex flex-col gap-8 mt-12 text-2xl font-serif italic text-left">
@@ -79,6 +82,7 @@
                 <img id="footer-logo-img" src="Logo-GF-lettres.png" alt="GF" class="h-7 w-auto">
                 <span class="text-[9px] group-hover:text-[#b45309] transition-colors duration-300">GF Productions</span>
             </div>
+
             <div class="flex flex-col items-center gap-4">
                 <span class="text-[9px] tracking-[0.3em] opacity-80 uppercase font-bold">Suivez-nous</span>
                 <div class="flex gap-6 items-center">
@@ -90,6 +94,7 @@
                     </a>
                 </div>
             </div>
+
             <div class="flex justify-center md:justify-end gap-6 text-[9px]">
                 <button onclick="app.navigate('mentions')" class="hover:text-[#b45309] transition-colors">Mentions Légales</button>
             </div>
@@ -97,6 +102,7 @@
         <p class="mt-8 text-center text-stone-400 text-[8px] uppercase tracking-widest">&copy; 2025 GF Productions. Tous droits réservés.</p>
     </footer>
 
+    <!-- MODAL -->
     <div id="showModal" class="modal fixed inset-0 z-[100] bg-stone-900/60 flex items-center justify-center p-4 backdrop-blur-sm" onclick="if(event.target===this) app.closeModal()">
         <div class="bg-white max-w-5xl w-full max-h-[95vh] overflow-hidden relative shadow-2xl rounded-3xl flex flex-col md:flex-row">
             <button onclick="app.closeModal()" class="absolute top-6 right-6 bg-white/90 p-2 rounded-full shadow-lg text-stone-400 hover:text-[#b45309] z-[110]">✕</button>
@@ -197,7 +203,8 @@
                         case 'home': this.viewHome(container); break;
                         case 'auteur': 
                             this.viewAuteur(container); 
-                            this.initAuteurCarousel();
+                            // Petit délai pour laisser le navigateur injecter le HTML avant de démarrer le carrousel
+                            setTimeout(() => this.initAuteurCarousel(), 100);
                             break;
                         case 'presskits': this.viewPress(container); break;
                         case 'booking': this.viewBooking(container); break;
@@ -254,7 +261,7 @@
             viewAuteur(container) {
                 const a = this.content.auteur || {};
                 const partners = a.partners || [];
-                // Triple la liste pour un scroll infini parfait sans "mur"
+                // On triple les partenaires pour garantir que l'utilisateur n'arrive jamais au bout manuellement
                 const triplePartners = [...partners, ...partners, ...partners];
 
                 container.innerHTML = `
@@ -295,7 +302,7 @@
                             <div class="carousel-mask">
                                 <div id="partners-carousel" class="flex gap-6 overflow-x-auto no-scrollbar py-4 cursor-grab active:cursor-grabbing select-none">
                                     ${triplePartners.map(p => `
-                                        <div class="partner-card w-[240px] md:w-[320px] aspect-[4/5] bg-stone-200 rounded-[2.5rem] overflow-hidden shadow-xl shrink-0 relative">
+                                        <div class="partner-card w-[260px] md:w-[320px] aspect-[4/5] bg-stone-200 rounded-[2.5rem] overflow-hidden shadow-xl shrink-0 relative">
                                             <img src="${p.image || ''}" class="w-full h-full object-cover pointer-events-none">
                                             <div class="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-stone-900/70 to-transparent">
                                                 <p class="text-white text-[11px] uppercase font-bold tracking-[0.2em] text-left">${p.nom || ''}</p>
@@ -312,40 +319,50 @@
                 const carousel = document.getElementById('partners-carousel');
                 if (!carousel) return;
 
-                const cardWidth = carousel.querySelector('.partner-card').offsetWidth + 24; // Largeur + gap
-                const originalLength = this.content.auteur.partners?.length || 0;
-                const totalScrollWidth = cardWidth * originalLength;
+                const partners = this.content.auteur?.partners || [];
+                if (partners.length === 0) return;
 
-                // On commence au milieu (le deuxième set de partenaires) pour pouvoir scroller à gauche ou à droite
-                carousel.scrollLeft = totalScrollWidth;
+                const firstCard = carousel.querySelector('.partner-card');
+                if (!firstCard || firstCard.offsetWidth === 0) {
+                    // Si les images ne sont pas encore mesurables, on réessaie dans 100ms
+                    setTimeout(() => this.initAuteurCarousel(), 100);
+                    return;
+                }
 
-                const step = 0.8; // Vitesse de l'auto-scroll (px par frame)
+                const cardWidth = firstCard.offsetWidth + 24; // Largeur + gap Tailwind gap-6
+                const singleSetWidth = cardWidth * partners.length;
 
-                const scroll = () => {
+                // Position de départ au centre du ruban triplé
+                carousel.scrollLeft = singleSetWidth;
+
+                const step = 0.8; // Vitesse de croisière (pixels par frame)
+
+                const animate = () => {
                     if (!this.isUserInteracting) {
                         carousel.scrollLeft += step;
 
-                        // Gestion de la boucle infinie
-                        if (carousel.scrollLeft >= totalScrollWidth * 2) {
-                            carousel.scrollLeft = totalScrollWidth;
-                        } else if (carousel.scrollLeft <= totalScrollWidth / 2) {
-                            carousel.scrollLeft = totalScrollWidth;
+                        // Téléportation invisible au centre quand on sort du set du milieu
+                        if (carousel.scrollLeft >= singleSetWidth * 2) {
+                            carousel.scrollLeft -= singleSetWidth;
+                        } else if (carousel.scrollLeft <= singleSetWidth / 2) {
+                            carousel.scrollLeft += singleSetWidth;
                         }
                     }
-                    this.autoScrollRaf = requestAnimationFrame(scroll);
+                    this.autoScrollRaf = requestAnimationFrame(animate);
                 };
 
-                // Événements d'interaction
-                const startInteract = () => { this.isUserInteracting = true; };
-                const endInteract = () => { this.isUserInteracting = false; };
+                // Événements pour arrêter l'auto-scroll lors de l'interaction utilisateur
+                const startInteraction = () => { this.isUserInteracting = true; };
+                const endInteraction = () => { this.isUserInteracting = false; };
 
-                carousel.addEventListener('mouseenter', startInteract);
-                carousel.addEventListener('mouseleave', endInteract);
-                carousel.addEventListener('touchstart', startInteract, { passive: true });
-                carousel.addEventListener('touchend', endInteract);
+                carousel.addEventListener('mousedown', startInteraction);
+                window.addEventListener('mouseup', endInteraction);
+                carousel.addEventListener('touchstart', startInteraction, { passive: true });
+                carousel.addEventListener('touchend', endInteraction);
+                carousel.addEventListener('mouseenter', startInteraction);
+                carousel.addEventListener('mouseleave', endInteraction);
 
-                // Lancement
-                this.autoScrollRaf = requestAnimationFrame(scroll);
+                this.autoScrollRaf = requestAnimationFrame(animate);
             },
 
             stopAutoScroll() {
@@ -365,7 +382,7 @@
                         </div>
                         <div class="grid grid-cols-1 gap-12">
                             ${this.shows.map(s => `
-                                <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-stone-100 hover:shadow-md transition-all flex flex-col md:flex-row gap-8 items-center">
+                                <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-stone-100 hover:shadow-md transition-all flex flex-col md:flex-row gap-8 items-center text-center md:text-left">
                                     <div class="w-32 md:w-40 shrink-0 aspect-[3/4] bg-stone-200 rounded-xl overflow-hidden shadow-lg">
                                         <img src="${s.poster || ''}" class="w-full h-full object-cover">
                                     </div>
@@ -387,8 +404,8 @@
 
             viewBooking(container) {
                 container.innerHTML = `
-                    <section class="page-transition max-w-2xl mx-auto px-6 py-20">
-                        <div class="mb-16 text-center">
+                    <section class="page-transition max-w-2xl mx-auto px-6 py-20 text-center">
+                        <div class="mb-16">
                             <span class="text-[#b45309] font-bold text-[10px] uppercase tracking-[0.5em] mb-4 block italic">Collaboration</span>
                             <h1 class="text-5xl md:text-6xl font-serif italic mb-4">Booking Pro</h1>
                             <p class="text-stone-500 text-xs italic mb-8 max-w-md mx-auto leading-relaxed">
@@ -396,42 +413,52 @@
                             </p>
                             <div class="h-px w-16 bg-[#b45309]/30 mx-auto"></div>
                         </div>
-                        <form id="bookingForm" class="space-y-6 text-left">
+            
+                        <form id="bookingForm" class="space-y-6 text-left bg-white p-8 md:p-12 rounded-[2rem] shadow-sm border border-stone-50">
+                            <div id="form-message" class="hidden p-4 rounded-xl text-xs font-bold uppercase tracking-widest mb-6"></div>
+                            
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Nom complet</label>
-                                    <input type="text" id="senderName" required placeholder="Gabriel Francès" class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all">
+                                    <input type="text" id="senderName" required placeholder="Gabriel Francès" class="w-full p-4 bg-stone-50 border border-stone-100 rounded-2xl outline-none focus:border-[#b45309] transition-all">
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Email professionnel</label>
-                                    <input type="email" id="senderEmail" required placeholder="contact@structure.fr" class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all">
+                                    <input type="email" id="senderEmail" required placeholder="contact@structure.fr" class="w-full p-4 bg-stone-50 border border-stone-100 rounded-2xl outline-none focus:border-[#b45309] transition-all">
                                 </div>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Structure / Théâtre</label>
-                                    <input type="text" id="senderStructure" placeholder="Nom de votre établissement" class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all">
+                                    <input type="text" id="senderStructure" placeholder="Nom de votre établissement" class="w-full p-4 bg-stone-50 border border-stone-100 rounded-2xl outline-none focus:border-[#b45309] transition-all">
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Période envisagée</label>
-                                    <input type="text" id="senderPeriod" placeholder="Saison 2025-2026..." class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all">
+                                    <input type="text" id="senderPeriod" placeholder="Saison 2025-2026..." class="w-full p-4 bg-stone-50 border border-stone-100 rounded-2xl outline-none focus:border-[#b45309] transition-all">
                                 </div>
                             </div>
                             <div class="space-y-2">
                                 <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Votre message</label>
-                                <textarea id="senderMsg" required placeholder="Détails de votre demande..." class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl h-40 outline-none transition-all resize-none"></textarea>
+                                <textarea id="senderMsg" required placeholder="Détails de votre demande..." class="w-full p-4 bg-stone-50 border border-stone-100 rounded-2xl h-40 outline-none focus:border-[#b45309] transition-all resize-none"></textarea>
                             </div>
-                            <button type="submit" id="submitBtn" class="w-full bg-[#c2410c] text-white py-5 rounded-2xl uppercase font-bold text-[10px] tracking-widest hover:bg-stone-900 transition-all shadow-xl mt-4">Envoyer la demande</button>
+                            <button type="submit" id="submitBtn" class="w-full bg-[#c2410c] text-white py-5 rounded-2xl uppercase font-bold text-[10px] tracking-widest hover:bg-stone-900 transition-all shadow-xl mt-4">
+                                Envoyer la demande
+                            </button>
                         </form>
                     </section>`;
             
                 const form = document.getElementById('bookingForm');
+                const formMsg = document.getElementById('form-message');
+
                 form.addEventListener('submit', async (e) => {
                     e.preventDefault();
                     const btn = document.getElementById('submitBtn');
                     const scriptURL = "https://script.google.com/macros/s/AKfycbyIFj8U82r3ejZjYIBfF7Cxh83vMzzMIHIS4EPGnUPtncATiNvTiMOy9q-lg5K6tKfZ/exec";
+            
                     btn.disabled = true;
                     btn.innerText = "Envoi en cours...";
+                    formMsg.className = "hidden";
+            
                     const data = {
                         nom: document.getElementById('senderName').value,
                         email: document.getElementById('senderEmail').value,
@@ -439,12 +466,15 @@
                         periode: document.getElementById('senderPeriod').value,
                         message: document.getElementById('senderMsg').value
                     };
+            
                     try {
                         await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } });
-                        alert("Merci ! Votre demande a bien été envoyée à GF Productions.");
+                        formMsg.innerText = "Merci ! Votre demande a bien été envoyée.";
+                        formMsg.className = "block p-4 rounded-xl text-xs font-bold uppercase tracking-widest bg-green-50 text-green-700 mb-6";
                         form.reset();
                     } catch (error) {
-                        alert("Une erreur est survenue.");
+                        formMsg.innerText = "Une erreur est survenue.";
+                        formMsg.className = "block p-4 rounded-xl text-xs font-bold uppercase tracking-widest bg-red-50 text-red-700 mb-6";
                     } finally {
                         btn.disabled = false;
                         btn.innerText = "Envoyer la demande";
@@ -484,6 +514,7 @@
                 const show = this.shows.find(s => s.id === id);
                 if (!show) return;
                 this.state.carouselIndex = 0;
+                this.state.testimonialIndex = 0;
                 const hasTestimonials = show.testimonials && show.testimonials.length > 0;
                 document.getElementById('modal-content').innerHTML = `
                     <div class="mb-10 text-left">
