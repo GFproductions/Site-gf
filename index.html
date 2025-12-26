@@ -29,6 +29,19 @@
         .testimonial-slide.active { opacity: 1; transform: translateY(0); position: relative; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Animation spécifique pour le défilement infini */
+        @keyframes infinite-scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+        .animate-scroll {
+            animation: infinite-scroll 40s linear infinite;
+        }
+        /* Pause au survol pour plus de confort */
+        .animate-scroll:hover {
+            animation-play-state: paused;
+        }
     </style>
 </head>
 <body class="bg-[#faf9f6] text-stone-900 overflow-x-hidden text-left">
@@ -40,20 +53,17 @@
                     <img id="nav-logo-img" src="Logo-GF-lettres.png" alt="GF" class="h-8 w-auto">
                     <span class="text-xl font-serif font-bold tracking-tighter group-hover:text-[#b45309] transition-colors duration-300">PRODUCTIONS</span>
                 </button>
-
                 <div class="hidden md:flex space-x-8 font-medium text-[10px] uppercase tracking-[0.2em] items-center text-stone-500">
                     <button type="button" onclick="app.navigate('home')" class="hover:text-[#b45309] transition-all duration-300">Accueil</button>
                     <button type="button" onclick="app.navigate('auteur')" class="hover:text-[#b45309] transition-all duration-300">L'Auteur</button>
                     <button type="button" onclick="app.navigate('presskits')" class="hover:text-[#b45309] transition-all duration-300">Press Kits</button>
                     <button type="button" onclick="app.navigate('booking')" class="bg-[#c2410c] text-white px-6 py-3 rounded-full hover:bg-stone-900 transition shadow-lg">Booking Pro</button>
                 </div>
-
                 <button type="button" class="md:hidden p-2 text-stone-500" onclick="app.toggleMenu()">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-width="2" stroke-linecap="round"/></svg>
                 </button>
             </div>
         </nav>
-
         <div id="mobile-menu" class="fixed inset-0 z-[60] bg-white flex flex-col p-10 md:hidden">
             <div class="flex justify-end"><button onclick="app.toggleMenu()" class="text-3xl text-stone-300 hover:text-stone-900">✕</button></div>
             <nav class="flex flex-col gap-8 mt-12 text-2xl font-serif italic text-left">
@@ -73,19 +83,17 @@
                 <img id="footer-logo-img" src="Logo-GF-lettres.png" alt="GF" class="h-7 w-auto">
                 <span class="text-[9px] group-hover:text-[#b45309] transition-colors duration-300">GF Productions</span>
             </div>
-
             <div class="flex flex-col items-center gap-4">
                 <span class="text-[9px] tracking-[0.3em] opacity-80 uppercase font-bold">Suivez-nous</span>
                 <div class="flex gap-6 items-center">
                     <a id="footer-insta" href="#" target="_blank" class="text-stone-400 hover:text-[#b45309] transition-all duration-300" aria-label="Instagram">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                     </a>
-                    <a id="footer-fb" href="#" target="_blank" class="text-stone-400 hover:text-[#b45309] transition-colors" aria-label="Facebook">
+                    <a id="footer-fb" href="#" target="_blank" class="text-stone-400 hover:text-[#b45309] transition-all duration-300" aria-label="Facebook">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                     </a>
                 </div>
             </div>
-
             <div class="flex justify-center md:justify-end gap-6 text-[9px]">
                 <button onclick="app.navigate('mentions')" class="hover:text-[#b45309] transition-colors">Mentions Légales</button>
             </div>
@@ -131,9 +139,7 @@
         const db = getFirestore(firebaseApp);
 
         window.app = {
-            state: { view: 'home', id: null, carouselIndex: 0, testimonialIndex: 0 },
-            testimonialInterval: null,
-            partnersInterval: null,
+            state: { view: 'home', id: null, carouselIndex: 0 },
             shows: [],
             content: {},
 
@@ -183,18 +189,13 @@
             render() {
                 const { view, id } = this.state;
                 window.scrollTo(0, 0);
-                this.stopPartnersAutoScroll(); // Toujours arrêter le défilement lors d'un changement de vue
-                
                 const container = document.getElementById('content-area');
                 if (view === 'spectacle' && id) { this.openModal(id); } 
                 else {
                     this.hideModalUI();
                     switch(view) {
                         case 'home': this.viewHome(container); break;
-                        case 'auteur': 
-                            this.viewAuteur(container); 
-                            setTimeout(() => this.startPartnersAutoScroll(), 1000); // Activer l'auto-scroll
-                            break;
+                        case 'auteur': this.viewAuteur(container); break;
                         case 'presskits': this.viewPress(container); break;
                         case 'booking': this.viewBooking(container); break;
                         case 'mentions': this.viewMentions(container); break;
@@ -249,6 +250,10 @@
 
             viewAuteur(container) {
                 const a = this.content.auteur || {};
+                // On double la liste des partenaires pour créer l'effet infini
+                const partnerList = a.partners || [];
+                const doublePartners = [...partnerList, ...partnerList];
+
                 container.innerHTML = `
                     <section class="page-transition max-w-7xl mx-auto px-6 pt-24 pb-16 text-left">
                         <div class="flex flex-col md:flex-row gap-16 items-center mb-24">
@@ -266,6 +271,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-24 mb-24 items-center">
                             <div>
                                 <h3 class="text-3xl font-serif italic mb-8">${a.quote2 || ''}</h3>
@@ -276,48 +282,33 @@
                                 <div class="aspect-square rounded-2xl overflow-hidden mt-12 shadow-lg"><img src="${a.photo_side_2 || ''}" class="w-full h-full object-cover"></div>
                             </div>
                         </div>
+
                         <div class="max-w-6xl mx-auto px-6">
                             <div class="relative flex flex-col items-center mb-10">
                                 <span class="text-[#b45309] font-bold text-[10px] uppercase tracking-[0.5em] block italic">Partenaires & Inspirations</span>
                                 <div class="h-px w-10 bg-[#b45309]/30 mt-4"></div>
                             </div>
-                            <!-- Carrousel avec ID pour l'auto-scroll -->
-                            <div id="partners-carousel" class="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-4 no-scrollbar scroll-smooth">
-                                ${(a.partners || []).map(p => `
-                                    <div class="partner-card w-[80%] md:w-[calc(33.33%-1rem)] aspect-[4/5] bg-stone-200 rounded-[2.5rem] overflow-hidden shadow-xl snap-start shrink-0 relative">
-                                        <img src="${p.image || ''}" class="w-full h-full object-cover">
-                                        <div class="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-stone-900/70 to-transparent">
-                                            <p class="text-white text-[11px] uppercase font-bold tracking-[0.2em] text-left">${p.nom || ''}</p>
+
+                            <!-- CONTENEUR DU CARROUSEL INFINI -->
+                            <div class="relative w-full overflow-hidden">
+                                <!-- Fade gauche -->
+                                <div class="absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-[#faf9f6] to-transparent z-10 pointer-events-none"></div>
+                                <!-- Fade droite -->
+                                <div class="absolute inset-y-0 right-0 w-16 md:w-32 bg-gradient-to-l from-[#faf9f6] to-transparent z-10 pointer-events-none"></div>
+
+                                <div class="flex animate-scroll whitespace-nowrap">
+                                    ${doublePartners.map(p => `
+                                        <div class="partner-card w-[280px] md:w-[350px] aspect-[4/5] bg-stone-200 rounded-[2.5rem] overflow-hidden shadow-xl shrink-0 relative mr-6">
+                                            <img src="${p.image || ''}" class="w-full h-full object-cover">
+                                            <div class="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-stone-900/70 to-transparent">
+                                                <p class="text-white text-[11px] uppercase font-bold tracking-[0.2em] text-left">${p.nom || ''}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                `).join('')}
+                                    `).join('')}
+                                </div>
                             </div>
                         </div>
                     </section>`;
-            },
-
-            // Logique de défilement automatique
-            startPartnersAutoScroll() {
-                const carousel = document.getElementById('partners-carousel');
-                if (!carousel) return;
-                
-                this.partnersInterval = setInterval(() => {
-                    const maxScroll = carousel.scrollWidth - carousel.clientWidth;
-                    if (carousel.scrollLeft >= maxScroll - 5) {
-                        carousel.scrollTo({ left: 0, behavior: 'smooth' });
-                    } else {
-                        // On avance d'une carte (environ 1/3 de la largeur du conteneur en desktop)
-                        const step = carousel.clientWidth / (window.innerWidth > 768 ? 3 : 1);
-                        carousel.scrollBy({ left: step, behavior: 'smooth' });
-                    }
-                }, 4000); // Défile toutes les 4 secondes
-            },
-
-            stopPartnersAutoScroll() {
-                if (this.partnersInterval) {
-                    clearInterval(this.partnersInterval);
-                    this.partnersInterval = null;
-                }
             },
 
             viewPress(container) {
@@ -363,7 +354,6 @@
                         </div>
             
                         <form id="bookingForm" class="space-y-6 text-left">
-                            <div id="form-message" class="hidden p-4 rounded-xl text-xs font-bold uppercase tracking-widest mb-6"></div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Nom complet</label>
@@ -395,7 +385,6 @@
                     </section>`;
             
                 const form = document.getElementById('bookingForm');
-                const formMsg = document.getElementById('form-message');
                 form.addEventListener('submit', async (e) => {
                     e.preventDefault();
                     const btn = document.getElementById('submitBtn');
@@ -411,12 +400,11 @@
                     };
                     try {
                         await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } });
-                        formMsg.innerText = "Merci ! Votre demande a bien été envoyée.";
-                        formMsg.className = "block p-4 rounded-xl text-xs font-bold uppercase tracking-widest bg-green-50 text-green-700 mb-6";
+                        alert("Merci ! Votre demande a bien été envoyée à GF Productions.");
                         form.reset();
                     } catch (error) {
-                        formMsg.innerText = "Une erreur est survenue. Contactez-nous à contact@gfproductions.fr";
-                        formMsg.className = "block p-4 rounded-xl text-xs font-bold uppercase tracking-widest bg-red-50 text-red-700 mb-6";
+                        console.error("Erreur:", error);
+                        alert("Une erreur est survenue. Vous pouvez nous contacter à contact@gfproductions.fr");
                     } finally {
                         btn.disabled = false;
                         btn.innerText = "Envoyer la demande";
@@ -442,7 +430,11 @@
                             </div>
                             <div>
                                 <h3 class="text-stone-900 font-bold uppercase tracking-widest text-[11px] mb-4">3. Propriété Intellectuelle</h3>
-                                <p>L'ensemble des contenus (textes, photographies, vidéos, logos) présents sur ce site est la propriété exclusive de GF Productions, sauf mention contraire.</p>
+                                <p>L'ensemble des contenus (textes, photographies, vidéos, logos) présents sur ce site est la propriété exclusive de GF Productions, sauf mention contraire. Toute reproduction ou exploitation sans autorisation préalable est interdite.</p>
+                            </div>
+                            <div>
+                                <h3 class="text-stone-900 font-bold uppercase tracking-widest text-[11px] mb-4">4. Données personnelles</h3>
+                                <p>Les informations collectées via le formulaire "Booking Pro" sont uniquement destinées au traitement de vos demandes par GF Productions. Conformément à la loi "Informatique et Libertés", vous disposez d'un droit d'accès et de rectification de vos données.</p>
                             </div>
                         </div>
                     </section>`;
@@ -452,7 +444,6 @@
                 const show = this.shows.find(s => s.id === id);
                 if (!show) return;
                 this.state.carouselIndex = 0;
-                this.state.testimonialIndex = 0;
                 const hasTestimonials = show.testimonials && show.testimonials.length > 0;
                 document.getElementById('modal-content').innerHTML = `
                     <div class="mb-10 text-left">
@@ -463,7 +454,7 @@
                             <div class="mt-12 pt-10 border-t border-stone-100 relative min-h-[160px]">
                                 <div id="testimonials-container" class="relative overflow-hidden h-full">
                                     ${show.testimonials.map((t, i) => `
-                                        <div class="testimonial-slide ${i === 0 ? 'active' : ''}" data-idx="${i}">
+                                        <div class="testimonial-slide ${i === 0 ? 'active' : ''}">
                                             <p class="text-stone-800 text-base leading-relaxed italic mb-4">"${t.text}"</p>
                                             <p class="text-[#b45309] font-bold text-[10px] uppercase tracking-widest">— ${t.auteur}</p>
                                         </div>
@@ -486,7 +477,6 @@
                         </div>
                     </div>`;
                 this.initCarousel(show.images_spectacles || []);
-                if (hasTestimonials) this.startTestimonialTimer(show.testimonials.length);
                 const m = document.getElementById('showModal');
                 m.style.display = 'flex';
                 setTimeout(() => m.classList.add('active'), 10);
@@ -519,15 +509,7 @@
                 this.state.carouselIndex = (this.state.carouselIndex - 1 + show.images_spectacles.length) % show.images_spectacles.length;
                 this.setCarousel(this.state.carouselIndex);
             },
-            startTestimonialTimer(count) { 
-                this.stopTestimonialTimer(); 
-                this.testimonialInterval = setInterval(() => { 
-                    this.state.testimonialIndex = (this.state.testimonialIndex + 1) % count; 
-                    document.querySelectorAll('.testimonial-slide').forEach((s, i) => s.classList.toggle('active', i === this.state.testimonialIndex)); 
-                }, 5000); 
-            },
-            stopTestimonialTimer() { if (this.testimonialInterval) clearInterval(this.testimonialInterval); },
-            closeModal() { this.stopTestimonialTimer(); this.navigate('home'); this.hideModalUI(); },
+            closeModal() { this.navigate('home'); this.hideModalUI(); },
             hideModalUI() { const m = document.getElementById('showModal'); if(!m) return; m.classList.remove('active'); setTimeout(() => { m.style.display = 'none'; document.body.style.overflow = 'auto'; }, 300); },
             toggleMenu() { document.getElementById('mobile-menu').classList.toggle('open'); }
         };
