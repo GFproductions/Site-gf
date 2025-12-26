@@ -6,8 +6,10 @@
     <meta name="description" content="GF Productions - Direction Artistique, Production et Diffusion de spectacles vivants par Gabriel Francès.">
     <link id="dynamic-favicon" rel="icon" type="image/png" href="Logo-GF-lettres.png">
     <title>GF Productions | Gabriel Francès</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;600&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
         body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
         h1, h2, h3, .font-serif { font-family: 'Playfair Display', serif; }
@@ -23,8 +25,6 @@
         .carousel-item { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.6s ease; z-index: 0; }
         .carousel-item.active { opacity: 1; z-index: 10; }
         .dot.active { width: 1.5rem; background-color: white; }
-        .testimonial-slide { transition: all 0.6s ease; position: absolute; width: 100%; opacity: 0; transform: translateY(10px); }
-        .testimonial-slide.active { opacity: 1; transform: translateY(0); position: relative; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -38,19 +38,22 @@
                     <img id="nav-logo-img" src="Logo-GF-lettres.png" alt="GF" class="h-8 w-auto">
                     <span class="text-xl font-serif font-bold tracking-tighter group-hover:text-[#b45309] transition-colors duration-300">PRODUCTIONS</span>
                 </button>
+
                 <div class="hidden md:flex space-x-8 font-medium text-[10px] uppercase tracking-[0.2em] items-center text-stone-500">
-                    <button type="button" onclick="app.navigate('home')" class="hover:text-[#b45309] transition-colors duration-300">Accueil</button>
-                    <button type="button" onclick="app.navigate('auteur')" class="hover:text-[#b45309] transition-colors duration-300">L'Auteur</button>
-                    <button type="button" onclick="app.navigate('presskits')" class="hover:text-[#b45309] transition-colors duration-300">Press Kits</button>
+                    <button type="button" onclick="app.navigate('home')" class="hover:text-[#b45309] transition-all duration-300">Accueil</button>
+                    <button type="button" onclick="app.navigate('auteur')" class="hover:text-[#b45309] transition-all duration-300">L'Auteur</button>
+                    <button type="button" onclick="app.navigate('presskits')" class="hover:text-[#b45309] transition-all duration-300">Press Kits</button>
                     <button type="button" onclick="app.navigate('booking')" class="bg-[#c2410c] text-white px-6 py-3 rounded-full hover:bg-stone-900 transition shadow-lg">Booking Pro</button>
                 </div>
+
                 <button type="button" class="md:hidden p-2 text-stone-500" onclick="app.toggleMenu()">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-width="2" stroke-linecap="round"/></svg>
                 </button>
             </div>
         </nav>
+        
         <div id="mobile-menu" class="fixed inset-0 z-[60] bg-white flex flex-col p-10 md:hidden">
-            <div class="flex justify-end"><button onclick="app.toggleMenu()" class="text-3xl text-stone-300 hover:text-stone-900">✕</button></div>
+            <div class="flex justify-end"><button onclick="app.toggleMenu()" class="text-3xl text-stone-300">✕</button></div>
             <nav class="flex flex-col gap-8 mt-12 text-2xl font-serif italic text-left">
                 <button onclick="app.navigate('home'); app.toggleMenu()" class="hover:text-[#b45309] text-left">Accueil</button>
                 <button onclick="app.navigate('auteur'); app.toggleMenu()" class="hover:text-[#b45309] text-left">L'Auteur</button>
@@ -110,6 +113,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, getDocs, doc, getDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        
         const firebaseConfig = {
             apiKey: "AIzaSyB87-I2WsxxbAqHKm0AofYktLq2VGm9Pu0",
             authDomain: "gf-productions-aa94c.firebaseapp.com",
@@ -118,22 +122,27 @@
             messagingSenderId: "132511747630",
             appId: "1:132511747630:web:c6369af57cbf0d293119bf"
         };
+
         const firebaseApp = initializeApp(firebaseConfig);
         const db = getFirestore(firebaseApp);
+
         window.app = {
             state: { view: 'home', id: null, carouselIndex: 0 },
             shows: [],
             content: {},
+
             async init() {
                 await this.loadAllData();
                 this.updateGlobalUI();
                 this.render();
             },
+
             async loadAllData() {
                 try {
                     const q = query(collection(db, "spectacles"), orderBy("order", "asc"));
                     const showsSnap = await getDocs(q);
                     this.shows = showsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
                     const contentIds = ['home', 'auteur', 'contact'];
                     for (const id of contentIds) {
                         const docSnap = await getDoc(doc(db, "site_content", id));
@@ -141,6 +150,7 @@
                     }
                 } catch (e) { console.error("Erreur Firebase:", e); }
             },
+
             updateGlobalUI() {
                 const h = this.content.home || {};
                 const c = this.content.contact || {};
@@ -157,11 +167,13 @@
                 if(ig) ig.href = c.instagram_url || '#';
                 if(fb) fb.href = c.facebook_url || '#';
             },
+
             navigate(view, id = null) {
                 this.state.view = view;
                 this.state.id = id;
                 this.render();
             },
+
             render() {
                 const { view, id } = this.state;
                 window.scrollTo(0, 0);
@@ -179,6 +191,7 @@
                     }
                 }
             },
+
             viewHome(container) {
                 const h = this.content.home || {};
                 container.innerHTML = `
@@ -190,8 +203,10 @@
                                 <span class="text-[11px] uppercase tracking-[0.4em] text-[#b45309] font-bold mb-3">${h.hero_subtitle || ''}</span>
                                 <h1 class="text-3xl md:text-4xl font-serif italic text-stone-900">${h.hero_title || ''}</h1>
                             </div>
-                            <button onclick="document.getElementById('note-auteur').scrollIntoView({behavior: 'smooth'})" class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-20 bg-[#c2410c] text-white px-8 py-5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] shadow-2xl">Découvrez le catalogue</button>
+                            <!-- Bouton Catalogue : Hover ajouté et Scroll vers catalogue-section -->
+                            <button onclick="document.getElementById('catalogue-section').scrollIntoView({behavior: 'smooth'})" class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-20 bg-[#c2410c] text-white px-8 py-5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] shadow-2xl hover:bg-stone-900 transition-all duration-300">Découvrez le catalogue</button>
                         </div>
+
                         <div id="note-auteur" class="max-w-4xl mx-auto px-6 pt-24 pb-16 text-center">
                             <p class="text-lg md:text-xl text-stone-600 leading-relaxed font-light italic mb-10 whitespace-pre-line">"${h.note_auteur || ''}"</p>
                             <div class="flex flex-col items-center gap-2">
@@ -199,7 +214,9 @@
                                 <img src="${h.signature || ''}" class="h-12 w-auto opacity-70 grayscale">
                             </div>
                         </div>
-                        <div id="catalogue-section" class="max-w-7xl mx-auto px-6 pt-20 pb-16 grid grid-cols-1 md:grid-cols-2 gap-16">
+
+                        <!-- Catalogue : scroll-mt-32 pour le centrage lors du scroll -->
+                        <div id="catalogue-section" class="max-w-7xl mx-auto px-6 pt-20 pb-16 grid grid-cols-1 md:grid-cols-2 gap-16 scroll-mt-32">
                             ${this.shows.map(s => `
                                 <article class="group cursor-pointer" onclick="app.navigate('spectacle', '${s.id}')">
                                     <div class="img-container aspect-[3/4] overflow-hidden bg-stone-200 mb-8 rounded-xl shadow-sm group-hover:shadow-xl transition-all">
@@ -212,19 +229,48 @@
                         </div>
                     </section>`;
             },
+
             viewAuteur(container) {
                 const a = this.content.auteur || {};
                 container.innerHTML = `<section class="page-transition max-w-7xl mx-auto px-6 py-24"><h2 class="text-4xl font-serif italic mb-8">L'Auteur</h2><p class="text-stone-600 leading-relaxed whitespace-pre-line">${a.bio_p1 || ''}</p></section>`;
             },
+
             viewPress(container) {
                 container.innerHTML = `<section class="page-transition max-w-6xl mx-auto px-6 py-24 text-center"><h1 class="text-4xl font-serif italic mb-12">Press Kits</h1><div class="grid grid-cols-1 md:grid-cols-2 gap-8">${this.shows.map(s => `<div class="p-8 bg-white border rounded-2xl shadow-sm hover:shadow-md transition-all"><h3 class="text-xl font-serif italic mb-4">${s.titre}</h3><a href="${s.press_kit || '#'}" target="_blank" class="text-[10px] font-bold uppercase tracking-widest text-[#c2410c] hover:underline">Télécharger le kit</a></div>`).join('')}</div></section>`;
             },
+
             viewBooking(container) {
                 container.innerHTML = `<section class="page-transition max-w-2xl mx-auto px-6 py-24 text-center"><h1 class="text-4xl font-serif italic mb-8">Booking Pro</h1><p class="text-stone-500 mb-12 italic">Contactez-nous pour toute demande de programmation.</p><a href="mailto:contact@gfproductions.fr" class="bg-[#c2410c] text-white px-10 py-5 rounded-full uppercase font-bold text-xs tracking-widest shadow-xl hover:bg-stone-900 transition-all">Envoyer un Email</a></section>`;
             },
+
             viewMentions(container) {
-                container.innerHTML = `<section class="page-transition max-w-4xl mx-auto px-6 py-24 text-left"><h1 class="text-4xl font-serif italic mb-8">Mentions Légales</h1><p class="text-stone-500 text-sm italic leading-relaxed">GF Productions - Gabriel Francès. Site hébergé par Firebase.</p></section>`;
+                container.innerHTML = `
+                    <section class="page-transition max-w-4xl mx-auto px-6 py-24 text-left">
+                        <h1 class="text-5xl font-serif italic mb-16">Mentions Légales</h1>
+                        <div class="space-y-12 text-stone-600 font-light leading-relaxed">
+                            <div>
+                                <h3 class="text-stone-900 font-bold uppercase tracking-widest text-[11px] mb-4">1. Éditeur du site</h3>
+                                <p>Le présent site est édité par <strong>GF Productions</strong>.<br>
+                                Responsable de la publication : <strong>Gabriel Francès</strong>.<br>
+                                Contact : <a href="mailto:contact@gfproductions.fr" class="text-[#c2410c] hover:underline">contact@gfproductions.fr</a></p>
+                            </div>
+                            <div>
+                                <h3 class="text-stone-900 font-bold uppercase tracking-widest text-[11px] mb-4">2. Hébergement</h3>
+                                <p>Le site est hébergé par <strong>Google Firebase</strong>.<br>
+                                Google Cloud France MSL, 8 Rue de Londres, 75009 Paris.</p>
+                            </div>
+                            <div>
+                                <h3 class="text-stone-900 font-bold uppercase tracking-widest text-[11px] mb-4">3. Propriété Intellectuelle</h3>
+                                <p>L'ensemble des contenus (textes, photographies, vidéos, logos) présents sur ce site est la propriété exclusive de GF Productions, sauf mention contraire. Toute reproduction ou exploitation sans autorisation préalable est interdite.</p>
+                            </div>
+                            <div>
+                                <h3 class="text-stone-900 font-bold uppercase tracking-widest text-[11px] mb-4">4. Données personnelles</h3>
+                                <p>Les informations collectées via le formulaire "Booking Pro" sont uniquement destinées au traitement de vos demandes par GF Productions. Conformément à la loi "Informatique et Libertés", vous disposez d'un droit d'accès et de rectification de vos données.</p>
+                            </div>
+                        </div>
+                    </section>`;
             },
+
             openModal(id) {
                 const show = this.shows.find(s => s.id === id);
                 if (!show) return;
@@ -248,6 +294,7 @@
                 setTimeout(() => m.classList.add('active'), 10);
                 document.body.style.overflow = 'hidden';
             },
+
             initCarousel(images) {
                 const container = document.getElementById('carousel-container');
                 const dotsContainer = document.getElementById('carousel-dots');
@@ -278,6 +325,7 @@
             hideModalUI() { const m = document.getElementById('showModal'); if(!m) return; m.classList.remove('active'); setTimeout(() => { m.style.display = 'none'; document.body.style.overflow = 'auto'; }, 300); },
             toggleMenu() { document.getElementById('mobile-menu').classList.toggle('open'); }
         };
+
         app.init();
     </script>
 </body>
