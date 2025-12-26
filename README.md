@@ -58,7 +58,7 @@ firebase use gf-productions-aa94c
 **Aperçu temporaire (Lien de test) :**
 
 ```
-firebase hosting:preview
+firebase hosting:channel:deploy preview
 
 ```
 
