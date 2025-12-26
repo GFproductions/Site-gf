@@ -312,7 +312,7 @@
 
             viewBooking(container) {
                 container.innerHTML = `
-                    <section class="page-transition max-w-2xl mx-auto px-6 py-20 text-center text-left">
+                    <section class="page-transition max-w-2xl mx-auto px-6 py-20">
                         <div class="mb-16 text-center">
                             <span class="text-[#b45309] font-bold text-[10px] uppercase tracking-[0.5em] mb-4 block italic">Collaboration</span>
                             <h1 class="text-5xl md:text-6xl font-serif italic mb-4">Booking Pro</h1>
@@ -321,34 +321,74 @@
                             </p>
                             <div class="h-px w-16 bg-[#b45309]/30 mx-auto"></div>
                         </div>
-                        <form class="space-y-6" onsubmit="event.preventDefault(); alert('Le formulaire est en cours de configuration.');">
+            
+                        <form id="bookingForm" class="space-y-6 text-left">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Nom complet</label>
-                                    <input type="text" placeholder="Gabriel Francès" class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
+                                    <input type="text" id="senderName" required placeholder="Gabriel Francès" class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Email professionnel</label>
-                                    <input type="email" placeholder="contact@structure.fr" class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
+                                    <input type="email" id="senderEmail" required placeholder="contact@structure.fr" class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
                                 </div>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Structure / Théâtre</label>
-                                    <input type="text" placeholder="Nom de votre établissement" class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
+                                    <input type="text" id="senderStructure" placeholder="Nom de votre établissement" class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Période envisagée</label>
-                                    <input type="text" placeholder="Saison 2025-2026..." class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
+                                    <input type="text" id="senderPeriod" placeholder="Saison 2025-2026..." class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
                                 </div>
                             </div>
                             <div class="space-y-2">
                                 <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Votre message</label>
-                                <textarea placeholder="Détails de votre demande..." class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl h-40 outline-none transition-all placeholder:opacity-30 resize-none"></textarea>
+                                <textarea id="senderMsg" required placeholder="Détails de votre demande..." class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl h-40 outline-none transition-all placeholder:opacity-30 resize-none"></textarea>
                             </div>
-                            <button class="w-full bg-[#c2410c] text-white py-5 rounded-2xl uppercase font-bold text-[10px] tracking-widest hover:bg-stone-900 transition-all shadow-xl mt-4">Envoyer la demande</button>
+                            <button type="submit" id="submitBtn" class="w-full bg-[#c2410c] text-white py-5 rounded-2xl uppercase font-bold text-[10px] tracking-widest hover:bg-stone-900 transition-all shadow-xl mt-4">
+                                Envoyer la demande
+                            </button>
                         </form>
                     </section>`;
+            
+                // --- LOGIQUE D'ENVOI ---
+                const form = document.getElementById('bookingForm');
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const btn = document.getElementById('submitBtn');
+                    const scriptURL = "https://script.google.com/macros/s/AKfycbyIFj8U82r3ejZjYIBfF7Cxh83vMzzMIHIS4EPGnUPtncATiNvTiMOy9q-lg5K6tKfZ/exec";
+            
+                    btn.disabled = true;
+                    btn.innerText = "Envoi en cours...";
+            
+                    const data = {
+                        nom: document.getElementById('senderName').value,
+                        email: document.getElementById('senderEmail').value,
+                        structure: document.getElementById('senderStructure').value,
+                        periode: document.getElementById('senderPeriod').value,
+                        message: document.getElementById('senderMsg').value
+                    };
+            
+                    try {
+                        await fetch(scriptURL, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            body: JSON.stringify(data),
+                            headers: { 'Content-Type': 'application/json' }
+                        });
+            
+                        alert("Merci ! Votre demande a bien été envoyée à GF Productions.");
+                        form.reset();
+                    } catch (error) {
+                        console.error("Erreur:", error);
+                        alert("Une erreur est survenue. Vous pouvez nous contacter à contact@gfproductions.fr");
+                    } finally {
+                        btn.disabled = false;
+                        btn.innerText = "Envoyer la demande";
+                    }
+                });
             },
 
             viewMentions(container) {
