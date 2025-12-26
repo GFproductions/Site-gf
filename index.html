@@ -26,20 +26,20 @@
         .carousel-item.active { opacity: 1; z-index: 10; }
         .dot.active { width: 1.5rem; background-color: white; }
         
-        /* Témoignages dans la modale */
+        /* Témoignages défilants */
         .testimonial-slide { transition: all 0.6s ease; position: absolute; width: 100%; opacity: 0; transform: translateY(10px); }
         .testimonial-slide.active { opacity: 1; transform: translateY(0); position: relative; }
 
-        .no-bar::-webkit-scrollbar { display: none; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Masquage subtil des bords pour le carrousel partenaires */
+        /* Effet de roue pour les partenaires */
         .carousel-mask {
             position: relative;
             mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
             -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
         }
-        #partners-carousel { -snap-type: none !important; }
+        #partners-carousel { scroll-snap-type: none !important; }
     </style>
 </head>
 <body class="bg-[#faf9f6] text-stone-900 overflow-x-hidden text-left">
@@ -87,10 +87,10 @@
             <div class="flex flex-col items-center gap-4">
                 <span class="text-[9px] tracking-[0.3em] opacity-80 uppercase font-bold">Suivez-nous</span>
                 <div class="flex gap-6 items-center">
-                    <a id="footer-insta" href="#" target="_blank" class="text-stone-400 hover:text-[#b45309] transition-all duration-300" aria-label="Instagram">
+                    <a id="footer-insta" href="#" target="_blank" class="text-stone-400 hover:text-[#b45309] transition-all duration-300">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                     </a>
-                    <a id="footer-fb" href="#" target="_blank" class="text-stone-400 hover:text-[#b45309] transition-all duration-300" aria-label="Facebook">
+                    <a id="footer-fb" href="#" target="_blank" class="text-stone-400 hover:text-[#b45309] transition-all duration-300">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                     </a>
                 </div>
@@ -102,7 +102,7 @@
         <p class="mt-8 text-center text-stone-400 text-[8px] uppercase tracking-widest">&copy; 2025 GF Productions. Tous droits réservés.</p>
     </footer>
 
-    <!-- MODAL -->
+    <!-- MODAL (TEMPLATE) -->
     <div id="showModal" class="modal fixed inset-0 z-[100] bg-stone-900/60 flex items-center justify-center p-4 backdrop-blur-sm" onclick="if(event.target===this) app.closeModal()">
         <div class="bg-white max-w-5xl w-full max-h-[95vh] overflow-hidden relative shadow-2xl rounded-3xl flex flex-col md:flex-row">
             <button onclick="app.closeModal()" class="absolute top-6 right-6 bg-white/90 p-2 rounded-full shadow-lg text-stone-400 hover:text-[#b45309] z-[110]">✕</button>
@@ -190,7 +190,7 @@
 
             render() {
                 const { view, id } = this.state;
-                window.To(0, 0);
+                window.scrollTo(0, 0);
                 
                 if (this.monitorRaf) cancelAnimationFrame(this.monitorRaf);
                 this.stopTestimonialTimer();
@@ -226,7 +226,7 @@
                                 <span class="text-[11px] uppercase tracking-[0.4em] text-[#b45309] font-bold mb-3">${h.hero_subtitle || ''}</span>
                                 <h1 class="text-3xl md:text-4xl font-serif italic text-stone-900">${h.hero_title || ''}</h1>
                             </div>
-                            <button onclick="document.getElementById('catalogue-section').IntoView({behavior: 'smooth'})" class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-20 bg-[#c2410c] text-white px-8 py-5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] shadow-2xl hover:bg-stone-900 transition-all duration-300">Découvrez le catalogue</button>
+                            <button onclick="document.getElementById('catalogue-section').scrollIntoView({ behavior: 'smooth', block: 'center' })" class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-20 bg-[#c2410c] text-white px-8 py-5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] shadow-2xl hover:bg-stone-900 transition-all duration-300">Découvrez le catalogue</button>
                         </div>
                         <div id="note-auteur" class="max-w-4xl mx-auto px-6 pt-24 pb-16 text-center">
                             <p class="text-lg md:text-xl text-stone-600 leading-relaxed font-light italic mb-10 whitespace-pre-line">"${h.note_auteur || ''}"</p>
@@ -235,7 +235,7 @@
                                 <img src="${h.signature || ''}" class="h-12 w-auto opacity-70 grayscale">
                             </div>
                         </div>
-                        <div id="catalogue-section" class="max-w-7xl mx-auto px-6 pt-20 pb-16 grid grid-cols-1 md:grid-cols-2 gap-16 scroll-mt-40">
+                        <div id="catalogue-section" class="max-w-7xl mx-auto px-6 pt-20 pb-16 grid grid-cols-1 md:grid-cols-2 gap-16">
                             ${this.shows.map(s => `
                                 <article class="group cursor-pointer" onclick="app.navigate('spectacle', '${s.id}')">
                                     <div class="img-container aspect-[3/4] overflow-hidden bg-stone-200 mb-8 rounded-xl shadow-sm group-hover:shadow-xl transition-all">
@@ -245,6 +245,16 @@
                                     <p class="text-[10px] uppercase tracking-widest text-stone-400 mt-2">${s.genre || ''}</p>
                                 </article>
                             `).join('')}
+                        </div>
+                        <div class="bg-stone-50 border-y border-stone-100 py-16 px-6">
+                            <div class="max-w-5xl mx-auto text-center grid grid-cols-1 md:grid-cols-3 gap-12">
+                                ${(h.stats || []).map(st => `
+                                    <div class="flex flex-col items-center">
+                                        <span class="text-4xl md:text-5xl font-serif text-[#c2410c] mb-2">${st.valeur}</span>
+                                        <p class="text-stone-500 uppercase tracking-[0.2em] text-[9px] font-bold max-w-[180px] leading-relaxed">${st.label}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
                         </div>
                     </section>`;
             },
@@ -320,7 +330,7 @@
 
             viewPress(container) {
                 container.innerHTML = `
-                    <section class="page-transition max-w-6xl mx-auto px-6 py-12 text-left">
+                    <section class="page-transition max-w-7xl mx-auto px-6 py-12 text-left">
                         <div class="text-center mb-16">
                             <span class="text-[#b45309] font-bold text-[10px] uppercase tracking-[0.5em] mb-3 block italic">Espace Professionnel</span>
                             <h1 class="text-3xl md:text-5xl font-serif italic mb-4">Press Kits</h1>
@@ -364,25 +374,25 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Nom complet</label>
-                                    <input type="text" id="senderName" required placeholder="Nom complet" class="w-full p-4 bg-stone-50 border border-stone-100 rounded-2xl outline-none focus:border-[#b45309] transition-all">
+                                    <input type="text" id="senderName" required placeholder="Votre nom" class="w-full p-4 bg-stone-50 border border-stone-100 rounded-2xl outline-none focus:border-[#b45309] transition-all">
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Email professionnel</label>
-                                    <input type="email" id="senderEmail" required placeholder="contact@structure.fr" class="w-full p-4 bg-stone-50 border border-stone-100 rounded-2xl outline-none focus:border-[#b45309] transition-all">
+                                    <input type="email" id="senderEmail" required placeholder="votre@email.fr" class="w-full p-4 bg-stone-50 border border-stone-100 rounded-2xl outline-none focus:border-[#b45309] transition-all">
                                 </div>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="space-y-2">
-                                    <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Structure / Théâtre</label>
+                                    <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Structure</label>
                                     <input type="text" id="senderStructure" placeholder="Nom de l'établissement" class="w-full p-4 bg-stone-50 border border-stone-100 rounded-2xl outline-none focus:border-[#b45309] transition-all">
                                 </div>
                                 <div class="space-y-2">
-                                    <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Période envisagée</label>
+                                    <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Saison</label>
                                     <input type="text" id="senderPeriod" placeholder="Saison..." class="w-full p-4 bg-stone-50 border border-stone-100 rounded-2xl outline-none focus:border-[#b45309] transition-all">
                                 </div>
                             </div>
                             <div class="space-y-2">
-                                <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Votre message</label>
+                                <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Message</label>
                                 <textarea id="senderMsg" required placeholder="Détails de votre demande..." class="w-full p-4 bg-stone-50 border border-stone-100 rounded-2xl h-40 outline-none focus:border-[#b45309] transition-all resize-none"></textarea>
                             </div>
                             <button type="submit" id="submitBtn" class="w-full bg-[#c2410c] text-white py-5 rounded-2xl uppercase font-bold text-[10px] tracking-widest hover:bg-stone-900 transition-all shadow-xl mt-4">Envoyer la demande</button>
@@ -391,31 +401,33 @@
                 
                 const form = document.getElementById('bookingForm');
                 const formMsg = document.getElementById('form-message');
-                form.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    const btn = document.getElementById('submitBtn');
-                    const scriptURL = "https://script.google.com/macros/s/AKfycbyIFj8U82r3ejZjYIBfF7Cxh83vMzzMIHIS4EPGnUPtncATiNvTiMOy9q-lg5K6tKfZ/exec";
-                    btn.disabled = true; btn.innerText = "Envoi en cours...";
-                    formMsg.className = "hidden";
-                    const data = {
-                        nom: document.getElementById('senderName').value,
-                        email: document.getElementById('senderEmail').value,
-                        structure: document.getElementById('senderStructure').value,
-                        periode: document.getElementById('senderPeriod').value,
-                        message: document.getElementById('senderMsg').value
-                    };
-                    try {
-                        await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } });
-                        formMsg.innerText = "Merci ! Votre demande a bien été envoyée.";
-                        formMsg.className = "block p-4 rounded-xl text-xs font-bold uppercase tracking-widest bg-green-50 text-green-700 mb-6";
-                        form.reset();
-                    } catch (error) {
-                        formMsg.innerText = "Une erreur est survenue.";
-                        formMsg.className = "block p-4 rounded-xl text-xs font-bold uppercase tracking-widest bg-red-50 text-red-700 mb-6";
-                    } finally {
-                        btn.disabled = false; btn.innerText = "Envoyer la demande";
-                    }
-                });
+                if (form) {
+                    form.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        const btn = document.getElementById('submitBtn');
+                        const scriptURL = "https://script.google.com/macros/s/AKfycbyIFj8U82r3ejZjYIBfF7Cxh83vMzzMIHIS4EPGnUPtncATiNvTiMOy9q-lg5K6tKfZ/exec";
+                        btn.disabled = true; btn.innerText = "Envoi en cours...";
+                        formMsg.className = "hidden";
+                        const data = {
+                            nom: document.getElementById('senderName').value,
+                            email: document.getElementById('senderEmail').value,
+                            structure: document.getElementById('senderStructure').value,
+                            periode: document.getElementById('senderPeriod').value,
+                            message: document.getElementById('senderMsg').value
+                        };
+                        try {
+                            await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } });
+                            formMsg.innerText = "Merci ! Votre demande a bien été envoyée.";
+                            formMsg.className = "block p-4 rounded-xl text-xs font-bold uppercase tracking-widest bg-green-50 text-green-700 mb-6";
+                            form.reset();
+                        } catch (error) {
+                            formMsg.innerText = "Une erreur est survenue.";
+                            formMsg.className = "block p-4 rounded-xl text-xs font-bold uppercase tracking-widest bg-red-50 text-red-700 mb-6";
+                        } finally {
+                            btn.disabled = false; btn.innerText = "Envoyer la demande";
+                        }
+                    });
+                }
             },
 
             viewMentions(container) {
@@ -469,7 +481,6 @@
                             <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
                         </a>
                         <div class="grid grid-cols-2 gap-4">
-                            <!-- Correction : Les boutons ferment la modale ET naviguent vers la bonne destination -->
                             <button onclick="app.closeModal('presskits')" class="border border-stone-200 hover:border-[#b45309] hover:text-[#b45309] px-6 py-4 rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-orange-50/50 transition-all">Kit technique</button>
                             <button onclick="app.closeModal('booking')" class="border border-stone-200 hover:border-[#b45309] hover:text-[#b45309] px-6 py-4 rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-orange-50/50 transition-all">Booking</button>
                         </div>
@@ -519,11 +530,12 @@
             },
             stopTestimonialTimer() { if (this.testimonialInterval) clearInterval(this.testimonialInterval); },
             
-            // Correction navigation depuis la modale
             closeModal(dest = 'home') { 
                 this.stopTestimonialTimer(); 
                 this.hideModalUI(); 
-                this.navigate(dest); 
+                if (dest !== 'home') {
+                    this.navigate(dest); 
+                }
             },
             
             hideModalUI() { 
