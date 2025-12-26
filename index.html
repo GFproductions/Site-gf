@@ -248,15 +248,13 @@
                                 <h2 class="text-3xl md:text-5xl font-serif italic mb-12 leading-tight">« ${a.quote || ''} »</h2>
                                 <div class="space-y-10 text-xl text-stone-600 font-light leading-relaxed italic border-l-2 border-orange-100 pl-10">
                                     <p class="whitespace-pre-line">${a.bio_p1 || ''}</p>
-                                    <p class="whitespace-pre-line">${a.bio_p2 || ''}</p>
                                 </div>
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-24 mb-24 items-center">
                             <div>
-                                <span class="text-[#b45309] font-bold text-[10px] uppercase tracking-[0.5em] mb-6 block">L'ombre créative</span>
-                                <h3 class="text-3xl font-serif italic mb-8">Écrire pour les autres, c'est endosser leur peau.</h3>
-                                <p class="text-stone-500 text-lg font-light leading-relaxed">Chaque collaboration est un nouveau défi de dramaturgie. Je ne me contente pas d'écrire des vannes ; je construis des spectacles comme on bâtit des ponts entre l'artiste et son public.</p>
+                                <h3 class="text-3xl font-serif italic mb-8">${a.quote2 || ''}</h3>
+                                <p class="text-stone-500 text-lg font-light leading-relaxed whitespace-pre-line">${a.bio_p2 || ''}</p>
                             </div>
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="aspect-square rounded-2xl overflow-hidden shadow-lg"><img src="${a.photo_side_1 || ''}" class="w-full h-full object-cover"></div>
@@ -323,43 +321,32 @@
                             </p>
                             <div class="h-px w-16 bg-[#b45309]/30 mx-auto"></div>
                         </div>
-
-                        <form class="space-y-6" onsubmit="event.preventDefault(); alert('Le formulaire est en cours de configuration. Pour toute demande urgente, merci de contacter gf.productions@gmail.com');">
+                        <form class="space-y-6" onsubmit="event.preventDefault(); alert('Le formulaire est en cours de configuration.');">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Nom complet</label>
-                                    <input type="text" placeholder="Gabriel Francès" 
-                                           class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
+                                    <input type="text" placeholder="Gabriel Francès" class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Email professionnel</label>
-                                    <input type="email" placeholder="contact@structure.fr" 
-                                           class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
+                                    <input type="email" placeholder="contact@structure.fr" class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
                                 </div>
                             </div>
-
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Structure / Théâtre</label>
-                                    <input type="text" placeholder="Nom de votre établissement" 
-                                           class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
+                                    <input type="text" placeholder="Nom de votre établissement" class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Période envisagée</label>
-                                    <input type="text" placeholder="Saison 2025-2026..." 
-                                           class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
+                                    <input type="text" placeholder="Saison 2025-2026..." class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl outline-none transition-all placeholder:opacity-30">
                                 </div>
                             </div>
-
                             <div class="space-y-2">
                                 <label class="text-[9px] uppercase font-bold tracking-widest text-stone-400 ml-2">Votre message</label>
-                                <textarea placeholder="Détails de votre demande..." 
-                                          class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl h-40 outline-none transition-all placeholder:opacity-30 resize-none"></textarea>
+                                <textarea placeholder="Détails de votre demande..." class="w-full p-4 bg-white border border-stone-100 focus:border-[#b45309] rounded-2xl h-40 outline-none transition-all placeholder:opacity-30 resize-none"></textarea>
                             </div>
-
-                            <button class="w-full bg-[#c2410c] text-white py-5 rounded-2xl uppercase font-bold text-[10px] tracking-widest hover:bg-stone-900 transition-all shadow-xl mt-4">
-                                Envoyer la demande
-                            </button>
+                            <button class="w-full bg-[#c2410c] text-white py-5 rounded-2xl uppercase font-bold text-[10px] tracking-widest hover:bg-stone-900 transition-all shadow-xl mt-4">Envoyer la demande</button>
                         </form>
                     </section>`;
             },
@@ -375,7 +362,7 @@
                 this.state.testimonialIndex = 0;
                 const hasTestimonials = show.testimonials && show.testimonials.length > 0;
                 document.getElementById('modal-content').innerHTML = `
-                    <div class="mb-10">
+                    <div class="mb-10 text-left">
                         <span class="text-[#b45309] text-[10px] uppercase font-bold tracking-widest">${show.genre || ''}</span>
                         <h2 class="text-4xl md:text-5xl font-serif italic mt-4 mb-8 leading-tight">${show.titre || ''}</h2>
                         <p class="text-stone-600 italic text-lg leading-relaxed mb-10 whitespace-pre-line">${show.description || ''}</p>
@@ -396,6 +383,14 @@
                             <span>Voir le Teaser</span>
                             <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
                         </a>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button onclick="app.navigate('presskits'); app.closeModal();" class="flex items-center justify-center gap-2 border border-stone-200 hover:border-[#b45309] hover:text-[#b45309] px-6 py-4 rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-orange-50/50 transition-all">
+                                <span>Kit technique</span>
+                            </button>
+                            <button onclick="app.navigate('booking'); app.closeModal();" class="flex items-center justify-center gap-2 border border-stone-200 hover:border-[#b45309] hover:text-[#b45309] px-6 py-4 rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-orange-50/50 transition-all">
+                                <span>Booking</span>
+                            </button>
+                        </div>
                     </div>`;
                 this.initCarousel(show.images_spectacles || []);
                 if (hasTestimonials) this.startTestimonialTimer(show.testimonials.length);
