@@ -19,9 +19,9 @@
         
         /* Style uniforme pour les biographies */
         .bio-paragraph {
-            font-size: 1rem; /* Base size */
+            font-size: 1rem;
             line-height: 1.75;
-            color: #57534e; /* stone-600 */
+            color: #57534e;
             font-style: italic;
             font-weight: 300;
         }
@@ -37,14 +37,12 @@
             transform: scale(1.03);
         }
 
+        /* Offset pour le scroll vers le catalogue (hauteur du header + marge) */
+        #catalogue-section { scroll-margin-top: 100px; }
+
         .modal { transition: all 0.3s ease; display: none; opacity: 0; }
         .modal.active { display: flex; opacity: 1; }
         
-        /* Conteneur image modale avec transition de hauteur */
-        #modal-img-container {
-            transition: height 0.4s ease-out, opacity 0.3s ease;
-        }
-
         #mobile-menu { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform: translateX(100%); }
         #mobile-menu.open { transform: translateX(0); }
         
@@ -70,12 +68,10 @@
     <header>
         <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-lg border-b border-stone-100">
             <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-                <!-- Logo cliquable uniquement -->
                 <button type="button" class="flex items-center group" onclick="app.navigate('home')">
                     <img id="nav-logo-img" src="Logo-GF-lettres.png" alt="GF" class="h-10 w-auto transition-transform group-hover:scale-105">
                 </button>
 
-                <!-- Navigation : Liens agrandis -->
                 <div class="hidden md:flex space-x-10 font-bold text-[13px] uppercase tracking-[0.2em] items-center text-stone-500">
                     <button type="button" onclick="app.navigate('home')" class="hover:text-[#b45309] transition-all">Accueil</button>
                     <button type="button" onclick="app.navigate('auteur')" class="hover:text-[#b45309] transition-all">Qui suis-je ?</button>
@@ -125,31 +121,35 @@
 
     <!-- MODAL SPECTACLE -->
     <div id="showModal" class="modal fixed inset-0 z-[100] bg-stone-900/80 flex items-center justify-center p-4 backdrop-blur-md" onclick="if(event.target===this) app.closeModal()">
+        <!-- Container Modal avec Scroll unique sur mobile pour effet de poussée -->
         <div class="bg-white max-w-6xl w-full max-h-[95vh] overflow-hidden relative shadow-2xl rounded-[2rem] flex flex-col md:flex-row">
             
-            <!-- Bouton X : Animation Hover -->
             <button onclick="app.closeModal()" class="absolute top-6 right-6 bg-white/90 p-2.5 rounded-full shadow-lg text-stone-400 hover:text-[#b45309] hover:rotate-90 hover:scale-110 transition-all z-[110]">✕</button>
             
-            <!-- Zone Carousel : Swipe & Dynamic Squash -->
-            <div id="modal-img-container" class="w-full md:w-1/2 relative bg-stone-100 h-[50vh] md:h-auto overflow-hidden shrink-0">
-                <div id="carousel-container" class="w-full h-full relative" 
-                     ontouchstart="app.handleTouchStart(event)" 
-                     ontouchend="app.handleTouchEnd(event)"></div>
+            <!-- Corps de la modale scrollable -->
+            <div id="modal-scroll-body" class="w-full flex flex-col md:flex-row overflow-y-auto overflow-x-hidden no-scrollbar">
                 
-                <div class="absolute inset-0 flex items-center justify-between px-4 z-20 pointer-events-none hidden md:flex">
-                    <button onclick="app.carouselPrev(event)" class="pointer-events-auto bg-white/40 hover:bg-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition shadow-sm">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="2" stroke-linecap="round"/></svg>
-                    </button>
-                    <button onclick="app.carouselNext(event)" class="pointer-events-auto bg-white/40 hover:bg-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition shadow-sm">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round"/></svg>
-                    </button>
+                <!-- Zone Carousel : Navigation Swipe -->
+                <div id="modal-img-container" class="w-full md:w-1/2 relative bg-stone-100 h-[50vh] md:h-auto md:sticky md:top-0 overflow-hidden shrink-0">
+                    <div id="carousel-container" class="w-full h-full relative" 
+                         ontouchstart="app.handleTouchStart(event)" 
+                         ontouchend="app.handleTouchEnd(event)"></div>
+                    
+                    <div class="absolute inset-0 flex items-center justify-between px-4 z-20 pointer-events-none hidden md:flex">
+                        <button onclick="app.carouselPrev(event)" class="pointer-events-auto bg-white/40 hover:bg-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition shadow-sm">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="2" stroke-linecap="round"/></svg>
+                        </button>
+                        <button onclick="app.carouselNext(event)" class="pointer-events-auto bg-white/40 hover:bg-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition shadow-sm">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round"/></svg>
+                        </button>
+                    </div>
+                    <div id="carousel-dots" class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20"></div>
                 </div>
-                <div id="carousel-dots" class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20"></div>
-            </div>
-            
-            <!-- Zone Texte : Dynamic Scroll Effect -->
-            <div id="modal-text-area" class="w-full md:w-1/2 p-8 md:p-14 flex flex-col justify-start bg-white overflow-y-auto" onscroll="app.handleModalScroll(this)">
-                <div id="modal-content" class="text-left mt-4 md:mt-0"></div>
+                
+                <!-- Zone Texte : Pousse le carousel au scroll sur mobile -->
+                <div id="modal-text-area" class="w-full md:w-1/2 p-8 md:p-14 flex flex-col justify-start bg-white">
+                    <div id="modal-content" class="text-left"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -248,23 +248,22 @@
                             <img src="${h.hero_image || ''}" class="absolute inset-0 w-full h-full object-cover opacity-15">
                             <div class="relative z-10 w-full h-full flex flex-col items-center">
                                 <div class="flex-grow flex items-center justify-center pt-8">
-                                    <img src="${h.logo || ''}" class="h-60 md:h-64 w-auto opacity-95">
+                                    <!-- Logo Hero : Taille réduite sur mobile (h-40) pour éviter l'encombrement -->
+                                    <img src="${h.logo || ''}" class="h-40 md:h-64 w-auto opacity-95">
                                 </div>
                                 <div class="pb-16 px-6 text-center">
                                     <span class="text-[11px] uppercase tracking-[0.4em] text-[#b45309] font-bold mb-3 block">${h.hero_subtitle || ''}</span>
                                     <h1 class="text-3xl md:text-4xl font-serif italic text-stone-900">${h.hero_title || ''}</h1>
                                 </div>
                             </div>
-                            <!-- Scroll Fix : block start avec offset manuel ou center -->
-                            <button onclick="document.getElementById('catalogue-section').scrollIntoView({ behavior: 'smooth', block: 'center' })" class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-20 bg-[#c2410c] text-white px-8 py-5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] shadow-2xl hover:bg-[#A0522D] transition-all">Découvrez le catalogue</button>
+                            <!-- Bouton Catalogue : Ajusté sur mobile (px-6 py-4) -->
+                            <button onclick="document.getElementById('catalogue-section').scrollIntoView({ behavior: 'smooth', block: 'start' })" class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-20 bg-[#c2410c] text-white px-6 py-4 md:px-8 md:py-5 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] shadow-2xl hover:bg-[#A0522D] transition-all">Découvrez le catalogue</button>
                         </div>
 
                         <div id="note-auteur" class="max-w-3xl mx-auto px-6 pt-24 pb-16 text-center flex flex-col items-center justify-center min-h-[30vh]">
-                            <!-- Note d'Auteur : Taille réduite (text-sm md:text-base) -->
                             <p class="text-sm md:text-base text-stone-600 leading-relaxed font-light italic mb-10 whitespace-pre-line">"${h.note_auteur || ''}"</p>
                             <div class="flex flex-col items-center gap-4">
                                 <p class="text-stone-900 font-semibold uppercase tracking-widest text-[11px]">Gabriel Francès</p>
-                                <!-- Signature : Taille ajustée (h-24 md:h-32) -->
                                 <img src="${h.signature || ''}" class="h-24 md:h-32 w-auto opacity-80 grayscale">
                             </div>
                         </div>
@@ -274,15 +273,17 @@
                                 const isNew = s.titre === "Pire Cadeau";
                                 return `
                                 <article class="group cursor-pointer relative" onclick="app.navigate('spectacle', '${s.id}')">
-                                    ${isNew ? `<div class="absolute top-4 left-4 z-20 bg-[#c2410c] text-white text-[9px] font-bold uppercase px-3 py-1.5 rounded-full shadow-lg tracking-widest">Nouvelle pièce</div>` : ''}
-                                    <div class="aspect-[3/4] overflow-hidden bg-stone-200 mb-8 rounded-2xl shadow-sm">
+                                    <!-- Badge Nouveau : Correction visibilité z-30 -->
+                                    ${isNew ? `<div class="absolute top-4 left-4 z-30 bg-[#c2410c] text-white text-[9px] font-bold uppercase px-3 py-1.5 rounded-full shadow-lg tracking-widest">Nouvelle pièce</div>` : ''}
+                                    <div class="aspect-[3/4] overflow-hidden bg-stone-200 mb-8 rounded-2xl shadow-sm relative z-10">
                                         <img src="${s.poster || ''}" class="poster-fade w-full h-full object-cover">
                                     </div>
-                                    <h3 class="text-2xl font-serif italic group-hover:text-[#b45309] transition-colors">${s.titre || ''}</h3>
-                                    <div class="mt-2 space-y-1">
-                                        <p class="text-[9px] uppercase tracking-widest text-stone-400 font-bold">${s.genre || ''}</p>
-                                        <!-- Année : Affichage brut -->
-                                        <p class="text-[10px] text-stone-400">${s.annee_ecriture || ''}</p>
+                                    <div class="relative z-20">
+                                        <h3 class="text-2xl font-serif italic group-hover:text-[#b45309] transition-colors">${s.titre || ''}</h3>
+                                        <div class="mt-2 space-y-1">
+                                            <p class="text-[9px] uppercase tracking-widest text-stone-400 font-bold">${s.genre || ''}</p>
+                                            <p class="text-[10px] text-stone-400">${s.annee_ecriture || ''}</p>
+                                        </div>
                                     </div>
                                 </article>
                             `}).join('')}
@@ -504,7 +505,6 @@
                             </div>` : ''}
                     </div>
                     <div class="flex flex-col gap-3 mt-6">
-                        <!-- Billetterie : Nouveau bouton et champ Firestore -->
                         <a href="${show.url_billetterie || '#'}" target="_blank" class="flex items-center justify-between w-full bg-[#c2410c] text-white px-8 py-4 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-[#A0522D] transition shadow-md">
                             <span>Billetterie</span>
                             <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
@@ -549,23 +549,11 @@
                 this.setCarousel(this.state.carouselIndex);
             },
             
-            /* Swipe Logic */
             handleTouchStart(e) { this.touchStartX = e.changedTouches[0].screenX; },
             handleTouchEnd(e) {
                 const endX = e.changedTouches[0].screenX;
                 if (endX < this.touchStartX - 50) this.carouselNext();
                 if (endX > this.touchStartX + 50) this.carouselPrev();
-            },
-
-            /* Modal Dynamic Effect */
-            handleModalScroll(el) {
-                const imgZone = document.getElementById('modal-img-container');
-                if (window.innerWidth < 768) {
-                    const scrollY = el.scrollTop;
-                    const newHeight = Math.max(20, 50 - scrollY / 10);
-                    imgZone.style.height = `${newHeight}vh`;
-                    imgZone.style.opacity = scrollY > 100 ? '0.3' : '1';
-                }
             },
 
             startTestimonialTimer(count) {
@@ -580,8 +568,6 @@
             closeModal(dest = 'home') { 
                 this.stopTestimonialTimer(); 
                 this.hideModalUI(); 
-                const imgZone = document.getElementById('modal-img-container');
-                if(imgZone) { imgZone.style.height = '50vh'; imgZone.style.opacity = '1'; }
                 if (dest !== 'home') this.navigate(dest); 
             },
             hideModalUI() { const m = document.getElementById('showModal'); if(!m) return; m.classList.remove('active'); setTimeout(() => { m.style.display = 'none'; document.body.style.overflow = 'auto'; }, 300); },
