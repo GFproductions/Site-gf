@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
     
     <title>GF Productions | Production Théâtrale & Spectacle Vivant | Gabriel Francès</title>
     <meta name="description" content="GF Productions : Direction artistique et production théâtrale. Découvrez le catalogue de spectacles vivants de Gabriel Francès et accédez aux ressources professionnelles.">
@@ -289,7 +292,7 @@
                                     <!-- Badge Nouveau : Correction visibilité z-30 -->
                                     ${isNew ? `<div class="absolute top-4 left-4 z-30 bg-[#c2410c] text-white text-[9px] font-bold uppercase px-3 py-1.5 rounded-full shadow-lg tracking-widest">Nouvelle pièce</div>` : ''}
                                     <div class="aspect-[3/4] overflow-hidden bg-stone-200 mb-8 rounded-2xl shadow-sm relative z-10">
-                                        <img src="${s.poster || ''}" class="poster-fade w-full h-full object-cover">
+                                        <img src="${s.poster || ''}" loading="lazy" class="poster-fade w-full h-full object-cover">
                                     </div>
                                     <div class="relative z-20">
                                         <h3 class="text-2xl font-serif italic group-hover:text-[#b45309] transition-colors">${s.titre || ''}</h3>
@@ -313,7 +316,7 @@
                         <div class="flex flex-col md:flex-row gap-16 items-center mb-24">
                             <div class="md:w-5/12">
                                 <div class="aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl relative border border-stone-100">
-                                    <img src="${a.profilephoto_url || ''}" class="w-full h-full object-cover">
+                                    <img src="${a.profilephoto_url || ''}" loading="lazy" class="w-full h-full object-cover">
                                     <div class="absolute bottom-8 left-8 font-signature text-5xl text-white drop-shadow-lg">Gabriel Francès</div>
                                 </div>
                             </div>
@@ -331,16 +334,16 @@
                                 <p class="bio-paragraph whitespace-pre-line">${a.bio_p2 || ''}</p>
                             </div>
                             <div class="grid grid-cols-2 gap-4">
-                                <div class="aspect-square rounded-2xl overflow-hidden shadow-lg"><img src="${a.photo_side_1 || ''}" class="w-full h-full object-cover"></div>
-                                <div class="aspect-square rounded-2xl overflow-hidden mt-12 shadow-lg"><img src="${a.photo_side_2 || ''}" class="w-full h-full object-cover"></div>
+                                <div class="aspect-square rounded-2xl overflow-hidden shadow-lg"><img src="${a.photo_side_1 || ''}" loading="lazy" class="w-full h-full object-cover"></div>
+                                <div class="aspect-square rounded-2xl overflow-hidden mt-12 shadow-lg"><img src="${a.photo_side_2 || ''}" loading="lazy" class="w-full h-full object-cover"></div>
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-24 mb-24 items-center">
                             <div class="order-2 md:order-1 grid grid-cols-3 gap-3">
-                                <div class="aspect-[3/4] rounded-xl overflow-hidden shadow-md mt-8"><img src="${a.photo_side_3 || ''}" class="w-full h-full object-cover"></div>
-                                <div class="aspect-[3/4] rounded-xl overflow-hidden shadow-xl -mt-4"><img src="${a.photo_side_4 || ''}" class="w-full h-full object-cover"></div>
-                                <div class="aspect-[3/4] rounded-xl overflow-hidden shadow-md mt-12"><img src="${a.photo_side_5 || ''}" class="w-full h-full object-cover"></div>
+                                <div class="aspect-[3/4] rounded-xl overflow-hidden shadow-md mt-8"><img src="${a.photo_side_3 || ''}" loading="lazy" class="w-full h-full object-cover"></div>
+                                <div class="aspect-[3/4] rounded-xl overflow-hidden shadow-xl -mt-4"><img src="${a.photo_side_4 || ''}" loading="lazy" class="w-full h-full object-cover"></div>
+                                <div class="aspect-[3/4] rounded-xl overflow-hidden shadow-md mt-12"><img src="${a.photo_side_5 || ''}" loading="lazy" class="w-full h-full object-cover"></div>
                             </div>
                             <div class="order-1 md:order-2">
                                 <h3 class="text-3xl font-serif italic mb-8">${a.quote3 || ''}</h3>
@@ -357,7 +360,7 @@
                                 <div id="partners-carousel" class="flex gap-6 overflow-x-auto no-scrollbar py-8 cursor-grab active:cursor-grabbing select-none">
                                     ${triplePartners.map(p => `
                                         <div class="partner-card w-[220px] md:w-[320px] aspect-[4/5] bg-stone-200 rounded-[2.5rem] overflow-hidden shadow-xl shrink-0 relative">
-                                            <img src="${p.image || ''}" class="w-full h-full object-cover pointer-events-none">
+                                            <img src="${p.image || ''}" loading="lazy" class="w-full h-full object-cover pointer-events-none">
                                             <div class="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-stone-900/70 to-transparent">
                                                 <p class="text-white text-[11px] uppercase font-bold tracking-[0.2em] text-left">${p.nom || ''}</p>
                                             </div>
@@ -398,7 +401,7 @@
                             ${this.shows.map(s => `
                                 <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-stone-100 hover:shadow-md transition-all flex flex-col md:flex-row gap-8 items-center text-center md:text-left">
                                     <div class="w-32 md:w-40 shrink-0 aspect-[3/4] bg-stone-200 rounded-xl overflow-hidden shadow-lg">
-                                        <img src="${s.poster || ''}" class="w-full h-full object-cover">
+                                        <img src="${s.poster || ''}" loading="lazy" class="w-full h-full object-cover">
                                     </div>
                                     <div class="flex-grow w-full">
                                         <h3 class="text-2xl font-serif italic mb-1">${s.titre || ''}</h3>
@@ -538,7 +541,7 @@
                 const container = document.getElementById('carousel-container');
                 const dotsContainer = document.getElementById('carousel-dots');
                 if (!container || !dotsContainer) return;
-                container.innerHTML = images.map((img, idx) => `<div class="carousel-item ${idx === 0 ? 'active' : ''}" data-index="${idx}"><img src="${img}" class="w-full h-full object-cover"></div>`).join('');
+                container.innerHTML = images.map((img, idx) => `<div class="carousel-item ${idx === 0 ? 'active' : ''}" data-index="${idx}"><img src="${img}" loading="lazy" class="w-full h-full object-cover"></div>`).join('');
                 dotsContainer.innerHTML = images.map((_, idx) => `<button onclick="app.setCarousel(${idx})" class="dot w-1.5 h-1.5 rounded-full bg-white/40 ${idx === 0 ? 'active' : ''}"></button>`).join('');
             },
             setCarousel(idx) {
