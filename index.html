@@ -257,11 +257,17 @@
             },
 
             navigate(view, id = null) {
+                // On mémorise si c'est une modale
+                const isModal = (view === 'spectacle');
+                
                 this.state.view = view;
                 this.state.id = id;
-                // ON DÉPLACE LE SCROLL ICI : 
-                // Il ne s'exécute que si l'utilisateur CLIQUE sur un bouton du menu
-                window.scrollTo(0, 0); 
+
+                // On ne scrolle en haut QUE si ce n'est PAS une modale
+                if (!isModal) {
+                    window.scrollTo(0, 0);
+                }
+                
                 this.render();
             },
 
@@ -629,7 +635,16 @@
             closeModal(dest = 'home') { 
                 this.stopTestimonialTimer(); 
                 this.hideModalUI(); 
-                if (dest !== 'home') this.navigate(dest); 
+                
+                if (dest !== 'home') {
+                    // Si on va vers une autre page (ex: Ressources)
+                    this.navigate(dest); 
+                } else {
+                    // Si on reste sur l'accueil, on nettoie juste l'état interne
+                    // sans déclencher de scroll ou de render global
+                    this.state.view = 'home';
+                    this.state.id = null;
+                }
             },
             hideModalUI() { const m = document.getElementById('showModal'); if(!m) return; m.classList.remove('active'); setTimeout(() => { m.style.display = 'none'; document.body.style.overflow = 'auto'; }, 300); },
             toggleMenu() { document.getElementById('mobile-menu').classList.toggle('open'); }
