@@ -193,23 +193,52 @@
             touchStartX: 0,
             
             async init() {
-                await this.loadAllData();
+                // 1. Charger uniquement l'essentiel (la Home)
+                await this.loadEssentialData();
                 this.updateGlobalUI();
-                this.render();
+                this.render(); // On affiche le Hero immédiatement ici !
+
+                // 2. Charger les spectacles en tâche de fond
+                this.loadCatalogue().then(() => {
+                    // Si l'utilisateur est toujours sur l'accueil, on affiche les pièces
+                    if (this.state.view === 'home') this.refreshCatalogue();
+                });
+
+                // 3. Charger le reste (Auteur, Contact) en dernier
+                this.loadSecondaryData();
             },
 
-            async loadAllData() {
+            async loadEssentialData() {
+                try {
+                    const docSnap = await getDoc(doc(db, "site_content", "home"));
+                    if (docSnap.exists()) this.content['home'] = docSnap.data();
+                } catch (e) { console.error("Erreur Home Data:", e); }
+            },
+
+            async loadCatalogue() {
                 try {
                     const q = query(collection(db, "spectacles"), orderBy("order", "asc"));
                     const showsSnap = await getDocs(q);
                     this.shows = showsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                } catch (e) { console.error("Erreur Catalogue Data:", e); }
+            },
 
-                    const contentIds = ['home', 'auteur', 'contact'];
+            async loadSecondaryData() {
+                try {
+                    const contentIds = ['auteur', 'contact'];
                     for (const id of contentIds) {
                         const docSnap = await getDoc(doc(db, "site_content", id));
                         if (docSnap.exists()) this.content[id] = docSnap.data();
                     }
-                } catch (e) { console.error("Firebase Error:", e); }
+                } catch (e) { console.error("Erreur Secondary Data:", e); }
+            },
+
+            refreshCatalogue() {
+                const area = document.getElementById('content-area');
+                if (area) {
+                    // On relance viewHome mais en mode "refresh" pour ne pas faire sauter l'écran
+                    this.viewHome(area, true);
+                }
             },
 
             updateGlobalUI() {
@@ -230,12 +259,15 @@
             navigate(view, id = null) {
                 this.state.view = view;
                 this.state.id = id;
+                // ON DÉPLACE LE SCROLL ICI : 
+                // Il ne s'exécute que si l'utilisateur CLIQUE sur un bouton du menu
+                window.scrollTo(0, 0); 
                 this.render();
             },
 
             render() {
                 const { view, id } = this.state;
-                window.scrollTo(0, 0);
+                // ON SUPPRIME window.scrollTo(0, 0) d'ici pour éviter les sauts de page imprévus
                 
                 const container = document.getElementById('content-area');
                 if (view === 'spectacle' && id) { 
@@ -256,15 +288,18 @@
                 }
             },
 
-            viewHome(container) {
+            viewHome(container, isRefresh = false) {
                 const h = this.content.home || {};
+                
+                // Si c'est un rafraîchissement (images qui arrivent), on enlève l'animation de fondu global
+                const transitionClass = isRefresh ? "" : "page-transition";
+
                 container.innerHTML = `
-                    <section class="page-transition">
+                    <section class="${transitionClass}">
                         <div class="relative h-[42vh] flex flex-col items-center bg-stone-100 overflow-visible">
                             <img src="${h.hero_image || ''}" class="absolute inset-0 w-full h-full object-cover opacity-15">
                             <div class="relative z-10 w-full h-full flex flex-col items-center">
                                 <div class="flex-grow flex items-center justify-center pt-8">
-                                    <!-- Logo Hero : Taille réduite sur mobile (h-40) pour éviter l'encombrement -->
                                     <img src="${h.logo || ''}" class="h-40 md:h-64 w-auto opacity-95">
                                 </div>
                                 <div class="pb-16 px-6 text-center">
@@ -272,7 +307,6 @@
                                     <h1 class="text-3xl md:text-4xl font-serif italic text-stone-900">${h.hero_title || ''}</h1>
                                 </div>
                             </div>
-                            <!-- Bouton Catalogue : Ajusté sur mobile (px-6 py-4) -->
                             <button onclick="document.getElementById('catalogue-section').scrollIntoView({ behavior: 'smooth', block: 'start' })" class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-20 bg-[#c2410c] text-white px-6 py-4 md:px-8 md:py-5 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] shadow-2xl hover:bg-[#A0522D] transition-all">Découvrez le catalogue</button>
                         </div>
 
@@ -285,24 +319,36 @@
                         </div>
 
                         <div id="catalogue-section" class="max-w-6xl mx-auto px-6 pt-20 pb-16 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-20">
-                            ${this.shows.map(s => {
-                                const isNew = s.titre === "Pire Cadeau";
-                                return `
-                                <article class="group cursor-pointer relative" onclick="app.navigate('spectacle', '${s.id}')">
-                                    <!-- Badge Nouveau : Correction visibilité z-30 -->
-                                    ${isNew ? `<div class="absolute top-4 left-4 z-30 bg-[#c2410c] text-white text-[9px] font-bold uppercase px-3 py-1.5 rounded-full shadow-lg tracking-widest">Nouvelle pièce</div>` : ''}
-                                    <div class="aspect-[3/4] overflow-hidden bg-stone-200 mb-8 rounded-2xl shadow-sm relative z-10">
-                                        <img src="${s.poster || ''}" loading="lazy" class="poster-fade w-full h-full object-cover">
-                                    </div>
-                                    <div class="relative z-20">
-                                        <h3 class="text-2xl font-serif italic group-hover:text-[#b45309] transition-colors">${s.titre || ''}</h3>
-                                        <div class="mt-2 space-y-1">
-                                            <p class="text-[9px] uppercase tracking-widest text-stone-400 font-bold">${s.genre || ''}</p>
-                                            <p class="text-[10px] text-stone-400">${s.annee_ecriture || ''}</p>
+                            ${this.shows.length > 0 ? 
+                                this.shows.map(s => {
+                                    const isNew = s.titre === "Pire Cadeau";
+                                    return `
+                                    <article class="group cursor-pointer relative" onclick="app.navigate('spectacle', '${s.id}')">
+                                        ${isNew ? `<div class="absolute top-4 left-4 z-30 bg-[#c2410c] text-white text-[9px] font-bold uppercase px-3 py-1.5 rounded-full shadow-lg tracking-widest">Nouvelle pièce</div>` : ''}
+                                        <div class="aspect-[3/4] overflow-hidden bg-stone-200 mb-8 rounded-2xl shadow-sm relative z-10">
+                                            <img src="${s.poster || ''}" loading="lazy" class="poster-fade w-full h-full object-cover">
                                         </div>
-                                    </div>
-                                </article>
-                            `}).join('')}
+                                        <div class="relative z-20">
+                                            <h3 class="text-2xl font-serif italic group-hover:text-[#b45309] transition-colors">${s.titre || ''}</h3>
+                                            <div class="mt-2 space-y-1">
+                                                <p class="text-[9px] uppercase tracking-widest text-stone-400 font-bold">${s.genre || ''}</p>
+                                                <p class="text-[10px] text-stone-400">${s.annee_ecriture || ''}</p>
+                                            </div>
+                                        </div>
+                                    </article>`;
+                                }).join('') 
+                                : 
+                                `<div class="animate-pulse">
+                                    <div class="aspect-[3/4] bg-stone-200 rounded-2xl mb-8"></div>
+                                    <div class="h-6 bg-stone-200 rounded w-3/4 mb-4"></div>
+                                    <div class="h-4 bg-stone-200 rounded w-1/4"></div>
+                                </div>
+                                <div class="animate-pulse">
+                                    <div class="aspect-[3/4] bg-stone-200 rounded-2xl mb-8"></div>
+                                    <div class="h-6 bg-stone-200 rounded w-3/4 mb-4"></div>
+                                    <div class="h-4 bg-stone-200 rounded w-1/4"></div>
+                                </div>`
+                            }
                         </div>
                     </section>`;
             },
